@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4n OS Wiki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --border-color: #e0e0e0;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --sidebar-hover: #34495e;
+            --accent-color: #3498db;
+            --code-bg: #f8f9fa;
+            --code-text: #d63384;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 60px;
+            --header-height: 60px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #444444;
+            --sidebar-bg: #1a1a1a;
+            --sidebar-text: #f0f0f0;
+            --sidebar-hover: #333333;
+            --accent-color: #5dade2;
+            --code-bg: #2d2d2d;
+            --code-text: #ff6b9d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            z-index: 1000;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .mobile-header .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--sidebar-text);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-header .menu-toggle:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        .mobile-header .logo {
+            flex: 1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .mobile-header .theme-toggle-mobile {
+            background: none;
+            border: none;
+            color: var(--sidebar-text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-header .theme-toggle-mobile:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 999;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 20px 10px;
+        }
+
+        .sidebar.collapsed .sidebar-header h1,
+        .sidebar.collapsed .sidebar-header p {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-header i {
+            font-size: 24px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 2px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--sidebar-hover);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar.collapsed .sidebar-menu a {
+            padding: 12px;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .sidebar-menu a span {
+            display: none;
+        }
+
+        /* Multi-level menu styling */
+        .sidebar-menu .level-1 {
+            font-weight: 600;
+        }
+
+        .sidebar-menu .level-2 {
+            font-size: 14px;
+        }
+
+        .sidebar-menu .level-3 {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            background-color: var(--bg-primary);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        .main-content.mobile-open {
+            margin-left: 0;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .content-header h2 {
+            font-size: 28px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section h3 {
+            margin: 25px 0 15px;
+            font-size: 22px;
+            color: var(--text-primary);
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .content-section ul, .content-section ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-color);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .note-box {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .note-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
+        .edition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .edition-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .edition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .edition-card h4 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .edition-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .content-header h2 {
+                font-size: 24px;
+            }
+            
+            .edition-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 80px 15px 15px;
+            }
+            
+            .theme-toggle {
+                display: none;
+            }
+            
+            .content-header {
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+            }
+            
+            .content-header h2 {
+                font-size: 22px;
+            }
+            
+            .edition-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-block {
+                font-size: 13px;
+                padding: 10px;
+            }
+            
+            .note-box {
+                padding: 12px;
+            }
+            
+            .content-section h3 {
+                font-size: 20px;
+                margin: 20px 0 10px;
+            }
+            
+            .content-section p {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 80px 10px 10px;
+            }
+            
+            .content-header h2 {
+                font-size: 20px;
+            }
+            
+            .edition-card {
+                padding: 15px;
+            }
+            
+            .code-block {
+                font-size: 12px;
+                padding: 8px;
+            }
+            
+            .sidebar-menu a {
+                padding: 15px 20px;
+                font-size: 16px;
+            }
+            
+            .sidebar-menu .level-2 {
+                font-size: 15px;
+            }
+            
+            .sidebar-menu .level-3 {
+                font-size: 14px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .sidebar-menu a {
+                padding: 15px 20px;
+                min-height: 44px;
+            }
+            
+            .theme-toggle, .mobile-header .menu-toggle, .mobile-header .theme-toggle-mobile {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .edition-card {
+                margin-bottom: 15px;
+            }
+            
+            .note-box {
+                margin: 15px 0;
+            }
+        }
+
+        /* High DPI/Retina Display Support */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .screenshot {
+                image-rendering: -webkit-optimize-contrast;
+            }
+            
+            .sidebar-header i {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar, .mobile-header, .theme-toggle, .sidebar-overlay {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin: 0 !important;
+                padding: 20px !important;
+            }
+            
+            .content-section {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+            
+            .code-block {
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+            
+            .edition-grid {
+                display: block;
+            }
+            
+            .edition-card {
+                margin-bottom: 20px;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" id="menu-toggle">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="logo">T4n OS</div>
+        <button class="theme-toggle-mobile" id="theme-toggle-mobile">
+            <i class="fa fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fa-brands fa-linux"></i> T4n OS</h1>
+                <p>Dokumentasi Resmi</p>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <!-- Pengenalan -->
+                <li><a href="#" class="menu-link level-1 active" data-section="pengenalan"><i class="fa fa-info-circle"></i><span>1. Pengenalan</span></a></li>
+                
+                <!-- Edisi -->
+                <li><a href="#" class="menu-link level-1" data-section="edisi"><i class="fa fa-desktop"></i><span>2. Edisi</span></a></li>
+                
+                <!-- Persiapan -->
+                <li><a href="#" class="menu-link level-1" data-section="persiapan"><i class="fa fa-check-circle"></i><span>3. Persiapan</span></a></li>
+                
+                <!-- Pemasangan -->
+                <li><a href="#" class="menu-link level-1" data-section="pemasangan"><i class="fa fa-download"></i><span>4. Pemasangan</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="live-usb"><i class="fa fa-usb"></i><span>4.1 Live USB</span></a>
+                            <ul>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="akun-pengguna"><i class="fa fa-user"></i><span>4.1.1 Akun Pengguna</span></a></li>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="boot-mode"><i class="fa fa-power-off"></i><span>4.1.2 Boot Mode</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="sistem-partisi"><i class="fa fa-hdd"></i><span>4.2 Sistem Partisi</span></a>
+                            <ul>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="tipe-disk"><i class="fa fa-database"></i><span>4.2.1 Tipe Disk</span></a></li>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="swap"><i class="fa fa-exchange-alt"></i><span>4.2.2 Swap</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Konfigurasi -->
+                <li><a href="#" class="menu-link level-1" data-section="konfigurasi"><i class="fa fa-cogs"></i><span>5. Konfigurasi</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="root"><i class="fa fa-user-shield"></i><span>5.1 Root</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="driver"><i class="fa fa-microchip"></i><span>5.2 Driver</span></a>
+                            <ul>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="intel"><i class="fa fa-microchip"></i><span>5.2.1 Intel</span></a></li>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="amd"><i class="fa fa-microchip"></i><span>5.2.2 AMD</span></a></li>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="nvidia"><i class="fa fa-microchip"></i><span>5.2.3 NVIDIA</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="jaringan"><i class="fa fa-wifi"></i><span>5.3 Jaringan</span></a>
+                            <ul>
+                                <li><a href="#" class="sub-menu-link level-3" data-section="broadcom"><i class="fa fa-wifi"></i><span>5.3.1 Broadcom</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Grub -->
+                <li><a href="#" class="menu-link level-1" data-section="grub"><i class="fa fa-undo"></i><span>6. Grub</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="dual-boot"><i class="fa fa-desktop"></i><span>6.1 Dual Boot</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="reinstall"><i class="fa fa-redo"></i><span>6.2 Reinstall</span></a></li>
+                    </ul>
+                </li>
+                
+                <!-- Manajemen Paket -->
+                <li><a href="#" class="menu-link level-1" data-section="manajemen-paket"><i class="fa fa-archive"></i><span>7. Manajemen Paket</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="xbps"><i class="fa fa-box"></i><span>7.1 XBPS</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="pr0gsh"><i class="fa fa-terminal"></i><span>7.2 Pr0gsh</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="t4nman"><i class="fa fa-cog"></i><span>7.3 T4n-Man</span></a></li>
+                    </ul>
+                </li>
+                
+                <!-- Kernel -->
+                <li><a href="#" class="menu-link level-1" data-section="kernel"><i class="fa fa-microchip"></i><span>8. Kernel</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="kernel-lts"><i class="fa fa-shield-alt"></i><span>8.1 Kernel Linux LTS</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="kernel-zen"><i class="fa fa-rocket"></i><span>8.2 Kernel Zen</span></a></li>
+                    </ul>
+                </li>
+                
+                <!-- Permasalahan -->
+                <li><a href="#" class="menu-link level-1" data-section="permasalahan"><i class="fa fa-exclamation-triangle"></i><span>9. Permasalahan</span></a>
+                    <ul>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="audio"><i class="fa fa-volume-up"></i><span>9.1 Audio</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="sddm"><i class="fa fa-sign-in-alt"></i><span>9.2 SDDM</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="xbps-issue"><i class="fa fa-box"></i><span>9.3 XBPS</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="t4nman-issue"><i class="fa fa-cog"></i><span>9.4 T4n-Man</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="pr0gsh-issue"><i class="fa fa-terminal"></i><span>9.5 Pr0gsh</span></a></li>
+                        <li><a href="#" class="sub-menu-link level-2" data-section="partisi-issue"><i class="fa fa-hdd"></i><span>9.6 Partisi</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content" id="main-content">
+            <div class="content-header">
+                <h2 id="section-title">1. Pengenalan</h2>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fa fa-moon"></i>
+                </button>
+            </div>
+            
+            <!-- Pengenalan Section -->
+            <div class="content-section active" id="pengenalan">
+                <h3>Tentang T4n OS</h3>
+                <p>T4n OS adalah distribusi Linux berbasis Void Linux yang dioptimalkan untuk kinerja tinggi dan pengalaman pengguna yang mulus. Didesain untuk pengguna yang menginginkan sistem yang ringan, cepat, dan dapat disesuaikan.</p>
+                
+                <img src="https://via.placeholder.com/800x450?text=T4n+OS+Desktop" alt="T4n OS Desktop" class="screenshot">
+                
+                <p>T4n OS menggabungkan kestabilan Void Linux dengan berbagai peningkatan dan tweak khusus untuk memberikan pengalaman computing yang optimal. Sistem ini menggunakan paket manajer XBPS yang cepat dan andal, serta mendukung berbagai lingkungan desktop modern.</p>
+                
+                <div class="note-box">
+                    <p><strong>Catatan:</strong> T4n OS adalah proyek independen dan tidak berafiliasi dengan Void Linux secara resmi.</p>
+                </div>
+            </div>
+            
+            <!-- Edisi Section -->
+            <div class="content-section" id="edisi">
+                <h3>2. Edisi T4n OS</h3>
+                <p>T4n OS tersedia dalam beberapa edisi yang dioptimalkan untuk berbagai kebutuhan dan preferensi pengguna:</p>
+                
+                <div class="edition-grid">
+                    <div class="edition-card">
+                        <h4>XFCE Edition</h4>
+                        <img src="https://via.placeholder.com/300x200?text=XFCE+Desktop" alt="XFCE Desktop">
+                        <p>Edisi XFCE menawarkan lingkungan desktop yang ringan, stabil, dan mudah digunakan. Cocok untuk pengguna yang menginginkan keseimbangan antara kinerja dan fitur.</p>
+                    </div>
+                    
+                    <div class="edition-card">
+                        <h4>i3 Edition</h4>
+                        <img src="https://via.placeholder.com/300x200?text=i3+Window+Manager" alt="i3 Window Manager">
+                        <p>Edisi i3 menggunakan window manager tiling yang efisien untuk produktivitas maksimal. Ideal untuk pengguna yang lebih suka keyboard-driven workflow.</p>
+                    </div>
+                    
+                    <div class="edition-card">
+                        <h4>BSPWM Edition</h4>
+                        <img src="https://via.placeholder.com/300x200?text=BSPWM+Desktop" alt="BSPWM Desktop">
+                        <p>Edisi BSPWM menawarkan tiling window manager yang ringan dan dapat dikonfigurasi tinggi dengan fokus pada kinerja dan minimalisme.</p>
+                    </div>
+                    
+                    <div class="edition-card">
+                        <h4>Hyprland Edition</h4>
+                        <img src="https://via.placeholder.com/300x200?text=Hyprland+Desktop" alt="Hyprland Desktop">
+                        <p>Edisi Hyprland menggunakan compositor Wayland yang dinamis dengan animasi halus dan fitur modern. Cocok untuk pengguna yang menginginkan pengalaman visual yang menarik.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Persiapan Section -->
+            <div class="content-section" id="persiapan">
+                <h3>3. Persiapan Instalasi</h3>
+                <p>Sebelum memulai instalasi T4n OS, pastikan Anda telah memenuhi persyaratan berikut:</p>
+                
+                <ul>
+                    <li><strong>Hardware:</strong> Prosesor 64-bit (x86_64), minimal 2GB RAM (4GB direkomendasikan), dan minimal 15GB ruang disk</li>
+                    <li><strong>Media Instalasi:</strong> USB flash drive minimal 4GB</li>
+                    <li><strong>Koneksi Internet:</strong> Diperlukan untuk mengunduh paket selama instalasi</li>
+                    <li><strong>Backup Data:</strong> Pastikan Anda telah membackup data penting sebelum instalasi</li>
+                </ul>
+                
+                <h3>Unduh ISO T4n OS</h3>
+                <p>Unduh file ISO T4n OS dari situs resmi:</p>
+                <div class="code-block">
+                    https://tanos.org/download/
+                </div>
+                
+                <h3>Verifikasi ISO</h3>
+                <p>Setelah mengunduh, verifikasi integritas file ISO menggunakan checksum:</p>
+                <div class="code-block">
+                    sha256sum t4n-os-*.iso
+                </div>
+            </div>
+            
+            <!-- Pemasangan Section -->
+            <div class="content-section" id="pemasangan">
+                <h3>4. Pemasangan T4n OS</h3>
+                <p>Proses instalasi T4n OS dirancang untuk sederhana namun fleksibel. Ikuti langkah-langkah berikut untuk menginstal sistem:</p>
+                
+                <h4>1. Boot dari Live USB</h4>
+                <p>Masukkan USB flash drive yang berisi ISO T4n OS dan boot dari media tersebut. Pilih opsi "Boot T4n OS Live" dari menu boot.</p>
+                
+                <h4>2. Persiapkan Partisi</h4>
+                <p>Gunakan alat partisi seperti <code>fdisk</code>, <code>cfdisk</code>, atau <code>gparted</code> untuk mempersiapkan partisi:</p>
+                <div class="code-block">
+                    cfdisk /dev/sda
+                </div>
+                
+                <h4>3. Mount Partisi</h4>
+                <p>Mount partisi root dan home (jika ada):</p>
+                <div class="code-block">
+                    mount /dev/sda2 /mnt<br>
+                    mkdir -p /mnt/home<br>
+                    mount /dev/sda3 /mnt/home
+                </div>
+                
+                <h4>4. Instal Sistem Dasar</h4>
+                <p>Jalankan instalasi dengan perintah:</p>
+                <div class="code-block">
+                    t4n-installer
+                </div>
+                
+                <h4>5. Konfigurasi Sistem</h4>
+                <p>Setelah instalasi selesai, konfigurasi sistem dasar seperti pengguna, jaringan, dan driver.</p>
+                
+                <h4>6. Reboot</h4>
+                <p>Keluar dari lingkungan chroot dan reboot sistem:</p>
+                <div class="code-block">
+                    exit<br>
+                    umount -R /mnt<br>
+                    reboot
+                </div>
+            </div>
+            
+            <!-- Live USB Section -->
+            <div class="content-section" id="live-usb">
+                <h3>4.1 Live USB</h3>
+                <p>Untuk membuat Live USB T4n OS, Anda dapat menggunakan salah satu metode berikut:</p>
+                
+                <h4>Menggunakan dd (Linux/macOS)</h4>
+                <div class="code-block">
+                    dd if=t4n-os-*.iso of=/dev/sdX bs=4M status=progress
+                </div>
+                <p>Ganti <code>/dev/sdX</code> dengan device USB Anda (misal: <code>/dev/sdb</code>).</p>
+                
+                <h4>Menggunakan Etcher (Cross-platform)</h4>
+                <ol>
+                    <li>Unduh dan instal Etcher dari <a href="https://etcher.balena.io/">https://etcher.balena.io/</a></li>
+                    <li>Pilih file ISO T4n OS</li>
+                    <li>Pilih USB flash drive target</li>
+                    <li>Klik "Flash" untuk memulai proses</li>
+                </ol>
+                
+                <h4>Menggunakan Rufus (Windows)</h4>
+                <ol>
+                    <li>Unduh dan instal Rufus dari <a href="https://rufus.ie/">https://rufus.ie/</a></li>
+                    <li>Pilih USB flash drive target</li>
+                    <li>Pilih opsi "DD Image" dan pilih file ISO T4n OS</li>
+                    <li>Klik "Start" untuk memulai proses</li>
+                </ol>
+                
+                <div class="note-box">
+                    <p><strong>Peringatan:</strong> Proses ini akan menghapus semua data di USB flash drive. Pastikan Anda telah membackup data penting sebelum melanjutkan.</p>
+                </div>
+            </div>
+            
+            <!-- Akun Pengguna Section -->
+            <div class="content-section" id="akun-pengguna">
+                <h3>4.1.1 Akun Pengguna</h3>
+                <p>Saat membuat Live USB, Anda perlu mengkonfigurasi akun pengguna untuk lingkungan live:</p>
+                
+                <h4>Membuat Akun Pengguna Live</h4>
+                <div class="code-block">
+                    # Buat user live<br>
+                    useradd -m -G wheel,audio,video,storage t4n<br>
+                    echo "t4n:password" | chpasswd
+                </div>
+                
+                <h4>Mengatur Password Root</h4>
+                <div class="code-block">
+                    echo "root:password" | chpasswd
+                </div>
+                
+                <h4>Konfigurasi Sudo</h4>
+                <p>Untuk memungkinkan user t4n menggunakan sudo:</p>
+                <div class="code-block">
+                    echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Keamanan:</strong> Password default di lingkungan live sebaiknya diganti setelah boot untuk keamanan.</p>
+                </div>
+            </div>
+            
+            <!-- Boot Mode Section -->
+            <div class="content-section" id="boot-mode">
+                <h3>4.1.2 Boot Mode</h3>
+                <p>T4n OS mendukung dua mode boot: BIOS (Legacy) dan UEFI. Pastikan Anda memilih mode yang sesuai dengan sistem Anda:</p>
+                
+                <h4>Memeriksa Mode Boot</h4>
+                <div class="code-block">
+                    # Untuk UEFI<br>
+                    ls /sys/firmware/efi<br><br>
+                    # Jika direktori ada, sistem menggunakan UEFI
+                </div>
+                
+                <h4>Boot Mode untuk Live USB</h4>
+                <ul>
+                    <li><strong>UEFI Mode:</strong> Pilih opsi boot dengan label "UEFI" di menu boot</li>
+                    <li><strong>Legacy Mode:</strong> Pilih opsi boot tanpa label "UEFI"</li>
+                </ul>
+                
+                <h4>Implikasi Boot Mode</h4>
+                <p>Mode boot yang Anda pilih akan menentukan:</p>
+                <ul>
+                    <li>Tabel partisi (GPT untuk UEFI, MBR untuk Legacy)</li>
+                    <li>Lokasi bootloader (EFI partition untuk UEFI, MBR untuk Legacy)</li>
+                    <li>Driver yang digunakan saat boot</li>
+                </ul>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Sebagian besar komputer modern (produksi setelah 2010) mendukung UEFI. Gunakan UEFI jika memungkinkan untuk fitur keamanan yang lebih baik.</p>
+                </div>
+            </div>
+            
+            <!-- Sistem Partisi Section -->
+            <div class="content-section" id="sistem-partisi">
+                <h3>4.2 Sistem Partisi</h3>
+                <p>Partisi yang tepat sangat penting untuk kinerja dan stabilitas sistem. Berikut adalah skema partisi yang direkomendasikan untuk T4n OS:</p>
+                
+                <h4>Tipe Disk</h4>
+                <ul>
+                    <li><strong>Root (/):</strong> Minimal 15GB, disarankan 25-50GB untuk instalasi yang lebih lengkap</li>
+                    <li><strong>Home (/home):</strong> Sisa ruang disk untuk data pengguna</li>
+                    <li><strong>Swap:</strong> Minimal 2GB atau sama dengan ukuran RAM jika hibernasi diperlukan</li>
+                </ul>
+                
+                <h4>Contoh Skema Partisi</h4>
+                <div class="code-block">
+                    /dev/sda1 - EFI System Partition (512MB, FAT32)<br>
+                    /dev/sda2 - Root Partition (25GB, ext4)<br>
+                    /dev/sda3 - Home Partition (Sisa ruang, ext4)<br>
+                    /dev/sda4 - Swap Partition (4GB, linux-swap)
+                </div>
+                
+                <h4>Membuat Partisi dengan cfdisk</h4>
+                <div class="code-block">
+                    cfdisk /dev/sda
+                </div>
+                <p>Dalam cfdisk:</p>
+                <ol>
+                    <li>Pilih "gpt" untuk tabel partisi GPT (modern) atau "dos" untuk MBR (legacy)</li>
+                    <li>Buat partisi baru dengan "New"</li>
+                    <li>Tetapkan ukuran dan tipe partisi</li>
+                    <li>Tulis perubahan dengan "Write"</li>
+                    <li>Keluar dengan "Quit"</li>
+                </ol>
+                
+                <h4>Format Partisi</h4>
+                <p>Setelah partisi dibuat, format partisi tersebut:</p>
+                <div class="code-block">
+                    mkfs.fat -F32 /dev/sda1  # EFI partition<br>
+                    mkfs.ext4 /dev/sda2     # Root partition<br>
+                    mkfs.ext4 /dev/sda3     # Home partition<br>
+                    mkswap /dev/sda4         # Swap partition<br>
+                    swapon /dev/sda4         # Activate swap
+                </div>
+            </div>
+            
+            <!-- Tipe Disk Section -->
+            <div class="content-section" id="tipe-disk">
+                <h3>4.2.1 Tipe Disk (Root & User)</h3>
+                <p>Pemilihan tipe disk yang tepat untuk partisi root dan user sangat penting untuk kinerja sistem:</p>
+                
+                <h4>Partisi Root (/)</h4>
+                <p>Partisi root berisi sistem operasi dan aplikasi:</p>
+                <ul>
+                    <li><strong>Ukuran minimal:</strong> 15GB</li>
+                    <li><strong>Ukuran disarankan:</strong> 25-50GB</li>
+                    <li><strong>Filesystem:</strong> ext4 (default), btrfs, atau f2fs untuk SSD</li>
+                    <li><strong>Mount options:</strong> defaults,noatime untuk performa lebih baik</li>
+                </ul>
+                
+                <h4>Partisi Home (/home)</h4>
+                <p>Partisi home berisi data pengguna:</p>
+                <ul>
+                    <li><strong>Ukuran:</strong> Sisa ruang disk yang tersedia</li>
+                    <li><strong>Filesystem:</strong> ext4, btrfs (untuk snapshot), atau xfs</li>
+                    <li><strong>Mount options:</strong> defaults,noatime</li>
+                    <li><strong>Separate partition:</strong> Memudahkan reinstall tanpa kehilangan data</li>
+                </ul>
+                
+                <h4>Format Partisi</h4>
+                <div class="code-block">
+                    # Format root partition<br>
+                    mkfs.ext4 -L ROOT /dev/sda2<br><br>
+                    # Format home partition<br>
+                    mkfs.ext4 -L HOME /dev/sda3
+                </div>
+                
+                <h4>Mount Partisi</h4>
+                <div class="code-block">
+                    # Mount root<br>
+                    mount /dev/sda2 /mnt<br><br>
+                    # Buat dan mount home<br>
+                    mkdir /mnt/home<br>
+                    mount /dev/sda3 /mnt/home
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Menggunakan filesystem yang sama untuk root dan home (misal ext4) menyederhanakan manajemen dan kompatibilitas.</p>
+                </div>
+            </div>
+            
+            <!-- Swap Section -->
+            <div class="content-section" id="swap">
+                <h3>4.2.2 Swap</h3>
+                <p>Swap adalah ruang di disk yang digunakan ketika RAM penuh. Berikut adalah panduan untuk mengkonfigurasi swap:</p>
+                
+                <h4>Ukuran Swap yang Direkomendasikan</h4>
+                <ul>
+                    <li><strong>RAM < 2GB:</strong> Swap = 2x RAM</li>
+                    <li><strong>RAM 2-8GB:</strong> Swap = RAM</li>
+                    <li><strong>RAM > 8GB:</strong> Swap = minimal 4GB atau 8GB</li>
+                    <li><strong>Untuk hibernasi:</strong> Swap = RAM + sedikit buffer</li>
+                </ul>
+                
+                <h4>Membuat Swap Partition</h4>
+                <div class="code-block">
+                    # Buat partition swap (misal /dev/sda4)<br>
+                    # Format sebagai swap<br>
+                    mkswap /dev/sda4<br><br>
+                    # Aktifkan swap<br>
+                    swapon /dev/sda4
+                </div>
+                
+                <h4>Menggunakan Swap File</h4>
+                <p>Alternatif untuk swap partition adalah swap file:</p>
+                <div class="code-block">
+                    # Buat swap file 4GB<br>
+                    fallocate -l 4G /swapfile<br><br>
+                    # Atur permission<br>
+                    chmod 600 /swapfile<br><br>
+                    # Format sebagai swap<br>
+                    mkswap /swapfile<br><br>
+                    # Aktifkan swap<br>
+                    swapon /swapfile
+                </div>
+                
+                <h4>Konfigurasi Swappiness</h4>
+                <p>Swappiness mengontrol seberapa sering sistem menggunakan swap:</p>
+                <div class="code-block">
+                    # Lihat nilai swappiness saat ini<br>
+                    cat /proc/sys/vm/swappiness<br><br>
+                    # Set swappiness ke 10 (lebih sedikit menggunakan swap)<br>
+                    echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Performa:</strong> Untuk sistem dengan RAM besar (>8GB), swap dapat dikurangi atau bahkan dihilangkan kecuali untuk hibernasi.</p>
+                </div>
+            </div>
+            
+            <!-- Konfigurasi Section -->
+            <div class="content-section" id="konfigurasi">
+                <h3>5. Konfigurasi Sistem</h3>
+                <p>Setelah instalasi dasar selesai, Anda perlu mengkonfigurasi sistem untuk penggunaan optimal:</p>
+                
+                <h4>1. Konfigurasi Pengguna</h4>
+                <p>Buat pengguna baru dan atur password:</p>
+                <div class="code-block">
+                    useradd -m -G wheel,audio,video,storage username<br>
+                    passwd username
+                </div>
+                
+                <h4>2. Konfigurasi Sudo</h4>
+                <p>Edit file sudoers untuk memberikan akses sudo kepada grup wheel:</p>
+                <div class="code-block">
+                    visudo
+                </div>
+                <p>Hapus komentar pada baris: <code>%wheel ALL=(ALL:ALL) ALL</code></p>
+                
+                <h4>3. Konfigurasi Jaringan</h4>
+                <p>Untuk koneksi nirkabel, instal dan konfigurasi NetworkManager:</p>
+                <div class="code-block">
+                    xbps-install -S NetworkManager<br>
+                    ln -s /etc/sv/NetworkManager /var/service/<br>
+                    sv up NetworkManager
+                </div>
+                
+                <h4>4. Konfigurasi Locale</h4>
+                <p>Atur locale untuk bahasa Indonesia:</p>
+                <div class="code-block">
+                    echo "id_ID.UTF-8 UTF-8" >> /etc/locale.conf<br>
+                    localectl set-locale LANG=id_ID.UTF-8
+                </div>
+                
+                <h4>5. Konfigurasi Timezone</h4>
+                <p>Atur timezone ke Asia/Jakarta:</p>
+                <div class="code-block">
+                    ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime<br>
+                    hwclock --systohc
+                </div>
+            </div>
+            
+            <!-- Root Section -->
+            <div class="content-section" id="root">
+                <h3>5.1 Root</h3>
+                <p>Akses root di T4n OS dapat dikonfigurasi dengan beberapa cara:</p>
+                
+                <h4>Menggunakan Sudo</h4>
+                <p>Cara yang direkomendasikan adalah menggunakan sudo untuk akses administratif:</p>
+                <div class="code-block">
+                    sudo <command>
+                </div>
+                
+                <h4>Mengaktifkan Login Root Langsung</h4>
+                <p>Jika Anda memerlukan login root langsung (tidak disarankan untuk keamanan):</p>
+                <div class="code-block">
+                    passwd root
+                </div>
+                
+                <h4>Mengunci Akun Root</h4>
+                <p>Untuk meningkatkan keamanan, kunci akun root dan gunakan sudo saja:</p>
+                <div class="code-block">
+                    passwd -l root
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Keamanan:</strong> Menggunakan sudo lebih aman daripada login root langsung karena memberikan kontrol yang lebih baik atas akses administratif.</p>
+                </div>
+            </div>
+            
+            <!-- Driver Section -->
+            <div class="content-section" id="driver">
+                <h3>5.2 Driver</h3>
+                <p>T4n OS mendukung berbagai driver hardware. Berikut adalah panduan untuk menginstal driver yang sesuai:</p>
+                
+                <h4>Driver Intel</h4>
+                <p>Untuk grafis Intel:</p>
+                <div class="code-block">
+                    xbps-install -S intel-media-driver intel-vaapi-driver<br>
+                    # Untuk Xorg<br>
+                    xbps-install -S xf86-video-intel
+                </div>
+                
+                <h4>Driver AMD</h4>
+                <p>Untuk grafis AMD:</p>
+                <div class="code-block">
+                    xbps-install -S mesa-vulkan-radeon mesa-dri<br>
+                    # Untuk Xorg<br>
+                    xbps-install -S xf86-video-amdgpu
+                </div>
+                
+                <h4>Driver NVIDIA</h4>
+                <p>Untuk grafis NVIDIA:</p>
+                <div class="code-block">
+                    # Driver open-source (nouveau)<br>
+                    xbps-install -S mesa-dri xf86-video-nouveau<br><br>
+                    # Driver proprietary (disarankan untuk performa maksimal)<br>
+                    xbps-install -S nvidia
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Catatan:</strong> Setelah menginstal driver NVIDIA, Anda mungkin perlu mengkonfigurasi Xorg atau Wayland untuk menggunakan driver tersebut.</p>
+                </div>
+            </div>
+            
+            <!-- Intel Section -->
+            <div class="content-section" id="intel">
+                <h3>5.2.1 Driver Intel</h3>
+                <p>Driver Intel untuk grafis dan media di T4n OS:</p>
+                
+                <h4>Driver Grafis Intel</h4>
+                <div class="code-block">
+                    # Instal driver grafis Intel<br>
+                    xbps-install -S mesa-dri intel-media-driver
+                </div>
+                
+                <h4>Driver Xorg untuk Intel</h4>
+                <div class="code-block">
+                    # Untuk Xorg<br>
+                    xbps-install -S xf86-video-intel
+                </div>
+                
+                <h4>Driver VA-API untuk Intel</h4>
+                <div class="code-block">
+                    # Untuk akselerasi video<br>
+                    xbps-install -S intel-vaapi-driver libva-intel-driver
+                </div>
+                
+                <h4>Konfigurasi Xorg untuk Intel</h4>
+                <p>Buat file konfigurasi Xorg untuk Intel:</p>
+                <div class="code-block">
+                    mkdir -p /etc/X11/xorg.conf.d<br>
+                    echo 'Section "Device"<br>
+                    &nbsp;&nbsp;Identifier "Intel Graphics"<br>
+                    &nbsp;&nbsp;Driver "intel"<br>
+                    &nbsp;&nbsp;Option "AccelMethod" "sna"<br>
+                    &nbsp;&nbsp;Option "TearFree" "true"<br>
+                    EndSection' > /etc/X11/xorg.conf.d/20-intel.conf
+                </div>
+                
+                <h4>Verifikasi Instalasi</h4>
+                <div class="code-block">
+                    # Periksa driver yang digunakan<br>
+                    glxinfo | grep "OpenGL renderer"<br><br>
+                    # Periksa akselerasi VA-API<br>
+                    vainfo
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Untuk performa terbaik, gunakan kernel terbaru dan pastikan firmware Intel terinstal.</p>
+                </div>
+            </div>
+            
+            <!-- AMD Section -->
+            <div class="content-section" id="amd">
+                <h3>5.2.2 Driver AMD</h3>
+                <p>Driver AMD untuk grafis di T4n OS:</p>
+                
+                <h4>Driver Grafis AMD</h4>
+                <div class="code-block">
+                    # Instal driver grafis AMD<br>
+                    xbps-install -S mesa-dri mesa-vulkan-radeon
+                </div>
+                
+                <h4>Driver Xorg untuk AMD</h4>
+                <div class="code-block">
+                    # Untuk Xorg<br>
+                    xbps-install -S xf86-video-amdgpu
+                </div>
+                
+                <h4>Firmware AMD</h4>
+                <div class="code-block">
+                    # Instal firmware AMD<br>
+                    xbps-install -S linux-firmware-amd
+                </div>
+                
+                <h4>Konfigurasi Xorg untuk AMD</h4>
+                <p>Buat file konfigurasi Xorg untuk AMD:</p>
+                <div class="code-block">
+                    mkdir -p /etc/X11/xorg.conf.d<br>
+                    echo 'Section "Device"<br>
+                    &nbsp;&nbsp;Identifier "AMD Graphics"<br>
+                    &nbsp;&nbsp;Driver "amdgpu"<br>
+                    &nbsp;&nbsp;Option "TearFree" "true"<br>
+                    EndSection' > /etc/X11/xorg.conf.d/20-amdgpu.conf
+                </div>
+                
+                <h4>Verifikasi Instalasi</h4>
+                <div class="code-block">
+                    # Periksa driver yang digunakan<br>
+                    glxinfo | grep "OpenGL renderer"<br><br>
+                    # Periksa dukungan Vulkan<br>
+                    vulkaninfo | grep "deviceName"
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Untuk kartu AMD yang lebih baru (RX series dan seterusnya), driver amdgpu sudah termasuk dalam kernel Linux terbaru.</p>
+                </div>
+            </div>
+            
+            <!-- NVIDIA Section -->
+            <div class="content-section" id="nvidia">
+                <h3>5.2.3 Driver NVIDIA</h3>
+                <p>Driver NVIDIA untuk grafis di T4n OS:</p>
+                
+                <h4>Driver Open-Source (Nouveau)</h4>
+                <div class="code-block">
+                    # Instal driver nouveau<br>
+                    xbps-install -S mesa-dri xf86-video-nouveau
+                </div>
+                
+                <h4>Driver Proprietary (Disarankan)</h4>
+                <div class="code-block">
+                    # Instal driver NVIDIA proprietary<br>
+                    xbps-install -S nvidia
+                </div>
+                
+                <h4>Driver NVIDIA untuk 32-bit</h4>
+                <div class="code-block">
+                    # Untuk aplikasi 32-bit (misal Steam)<br>
+                    xbps-install -S nvidia-32bit
+                </div>
+                
+                <h4>Konfigurasi Xorg untuk NVIDIA</h4>
+                <p>Buat file konfigurasi Xorg untuk NVIDIA:</p>
+                <div class="code-block">
+                    mkdir -p /etc/X11/xorg.conf.d<br>
+                    echo 'Section "Device"<br>
+                    &nbsp;&nbsp;Identifier "NVIDIA Card"<br>
+                    &nbsp;&nbsp;Driver "nvidia"<br>
+                    &nbsp;&nbsp;Option "NoLogo" "true"<br>
+                    EndSection' > /etc/X11/xorg.conf.d/20-nvidia.conf
+                </div>
+                
+                <h4>Verifikasi Instalasi</h4>
+                <div class="code-block">
+                    # Periksa driver yang digunakan<br>
+                    glxinfo | grep "OpenGL renderer"<br><br>
+                    # Periksa dengan nvidia-settings<br>
+                    nvidia-settings
+                </div>
+                
+                <h4>Mengatasi Masalah Umum</h4>
+                <p>Jika mengalami masalah dengan driver NVIDIA:</p>
+                <div class="code-block">
+                    # Blacklist nouveau<br>
+                    echo "blacklist nouveau" > /etc/modprobe.d/blacklist-nouveau.conf<br><br>
+                    # Rebuild initramfs<br>
+                    xbps-reconfigure -f linux<version>
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Peringatan:</strong> Driver proprietary NVIDIA mungkin tidak kompatibel dengan kernel terbaru. Gunakan kernel LTS jika mengalami masalah.</p>
+                </div>
+            </div>
+            
+            <!-- Jaringan Section -->
+            <div class="content-section" id="jaringan">
+                <h3>5.3 Jaringan</h3>
+                <p>T4n OS menggunakan NetworkManager untuk manajemen jaringan yang mudah:</p>
+                
+                <h4>Instalasi NetworkManager</h4>
+                <div class="code-block">
+                    xbps-install -S NetworkManager
+                </div>
+                
+                <h4>Aktifkan Service</h4>
+                <div class="code-block">
+                    ln -s /etc/sv/NetworkManager /var/service/<br>
+                    sv up NetworkManager
+                </div>
+                
+                <h4>Driver Broadcom</h4>
+                <p>Untuk perangkat Broadcom, instal driver dan firmware:</p>
+                <div class="code-block">
+                    # Untuk chipset BCM43xx<br>
+                    xbps-install -S broadcom-wl-dkms<br>
+                    # Muat modul kernel<br>
+                    modprobe wl
+                </div>
+                
+                <h4>Manajemen Jaringan via CLI</h4>
+                <p>Gunakan <code>nmcli</code> untuk manajemen jaringan via command line:</p>
+                <div class="code-block">
+                    # Lihat koneksi yang tersedia<br>
+                    nmcli device wifi list<br><br>
+                    # Hubungkan ke jaringan WiFi<br>
+                    nmcli device wifi connect SSID password password
+                </div>
+                
+                <h4>Manajemen Jaringan via GUI</h4>
+                <p>Untuk lingkungan desktop, Anda dapat menggunakan applet NetworkManager:</p>
+                <div class="code-block">
+                    xbps-install -S network-manager-applet
+                </div>
+            </div>
+            
+            <!-- Broadcom Section -->
+            <div class="content-section" id="broadcom">
+                <h3>5.3.1 Driver Broadcom</h3>
+                <p>Driver untuk perangkat jaringan Broadcom di T4n OS:</p>
+                
+                <h4>Identifikasi Perangkat Broadcom</h4>
+                <div class="code-block">
+                    # Periksa perangkat PCI<br>
+                    lspci | grep -i broadcom<br><br>
+                    # Periksa perangkat USB<br>
+                    lsusb | grep -i broadcom
+                </div>
+                
+                <h4>Driver untuk Chipset BCM43xx</h4>
+                <div class="code-block">
+                    # Instal driver broadcom-wl<br>
+                    xbps-install -S broadcom-wl-dkms<br><br>
+                    # Muat modul kernel<br>
+                    modprobe wl
+                </div>
+                
+                <h4>Driver untuk Chipset BCM4311, BCM4312, BCM4321, BCM4322</h4>
+                <div class="code-block">
+                    # Instal firmware<br>
+                    xbps-install -S linux-firmware-broadcom<br><br>
+                    # Muat modul b43<br>
+                    modprobe b43
+                </div>
+                
+                <h4>Driver untuk Chipset BCM4331</h4>
+                <div class="code-block">
+                    # Instal driver brcmfmac<br>
+                    xbps-install -S linux-firmware-brcm<br><br>
+                    # Muat modul brcmfmac<br>
+                    modprobe brcmfmac
+                </div>
+                
+                <h4>Mengatasi Masalah Umum</h4>
+                <p>Jika driver tidak berfungsi:</p>
+                <div class="code-block">
+                    # Blacklist driver yang konflik<br>
+                    echo "blacklist b43" >> /etc/modprobe.d/blacklist.conf<br>
+                    echo "blacklist ssb" >> /etc/modprobe.d/blacklist.conf<br><br>
+                    # Rebuild initramfs<br>
+                    xbps-reconfigure -f linux<version>
+                </div>
+                
+                <h4>Verifikasi Instalasi</h4>
+                <div class="code-block">
+                    # Periksa apakah modul dimuat<br>
+                    lsmod | grep -E "(wl|b43|brcmfmac)"<br><br>
+                    # Periksa interface jaringan<br>
+                    ip a
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Beberapa laptop HP memerlukan tambahan parameter kernel. Coba tambahkan <code>pcie_aspm=off</code> di GRUB jika mengalami masalah.</p>
+                </div>
+            </div>
+            
+            <!-- Grub Section -->
+            <div class="content-section" id="grub">
+                <h3>6. Grub</h3>
+                <p>GRUB (Grand Unified Bootloader) adalah bootloader default yang digunakan oleh T4n OS:</p>
+                
+                <h4>Instalasi GRUB</h4>
+                <div class="code-block">
+                    # Untuk sistem BIOS<br>
+                    grub-install --target=i386-pc /dev/sda<br><br>
+                    # Untuk sistem UEFI<br>
+                    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=T4n_OS
+                </div>
+                
+                <h4>Generate Konfigurasi</h4>
+                <div class="code-block">
+                    grub-mkconfig -o /boot/grub/grub.cfg
+                </div>
+                
+                <h4>Kustomisasi GRUB</h4>
+                <p>Edit file <code>/etc/default/grub</code> untuk kustomisasi:</p>
+                <div class="code-block">
+                    # Ubah timeout<br>
+                    GRUB_TIMEOUT=5<br><br>
+                    # Tambahkan parameter kernel<br>
+                    GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3"
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Penting:</strong> Setelah mengubah <code>/etc/default/grub</code>, jalankan kembali <code>grub-mkconfig</code> untuk menerapkan perubahan.</p>
+                </div>
+            </div>
+            
+            <!-- Dual Boot Section -->
+            <div class="content-section" id="dual-boot">
+                <h3>6.1 Dual Boot</h3>
+                <p>Untuk menginstal T4n OS bersama sistem operasi lain (misal Windows), ikuti langkah-langkah berikut:</p>
+                
+                <h4>Persiapan</h4>
+                <ol>
+                    <li>Backup data penting dari sistem yang ada</li>
+                    <li>Defragmentasi disk (untuk Windows)</li>
+                    <li>Sisakan ruang kosong untuk T4n OS (minimal 20GB)</li>
+                </ol>
+                
+                <h4>Partisi untuk Dual Boot</h4>
+                <div class="code-block">
+                    # Contoh skema partisi dengan Windows<br>
+                    /dev/sda1 - Windows Recovery (NTFS)<br>
+                    /dev/sda2 - EFI System Partition (FAT32)<br>
+                    /dev/sda3 - Windows (NTFS)<br>
+                    /dev/sda4 - T4n OS Root (ext4)<br>
+                    /dev/sda5 - T4n OS Home (ext4)<br>
+                    /dev/sda6 - Swap (linux-swap)
+                </div>
+                
+                <h4>Instalasi GRUB</h4>
+                <p>Saat instalasi GRUB, pilih opsi untuk mendeteksi sistem operasi lain:</p>
+                <div class="code-block">
+                    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=T4n_OS<br>
+                    grub-mkconfig -o /boot/grub/grub.cfg
+                </div>
+                
+                <h4>Memperbaiki GRUB</h4>
+                <p>Jika GRUB tidak mendeteksi Windows, tambahkan manual di <code>/etc/grub.d/40_custom</code>:</p>
+                <div class="code-block">
+                    menuentry "Windows 10" {<br>
+                    &nbsp;&nbsp;insmod ntfs<br>
+                    &nbsp;&nbsp;set root='(hd0,msdos3)'<br>
+                    &nbsp;&nbsp;chainloader +1<br>
+                    }
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Peringatan:</strong> Pastikan Anda memahami risiko dual boot. Kesalahan partisi dapat menyebabkan kehilangan data pada sistem yang ada.</p>
+                </div>
+            </div>
+            
+            <!-- Reinstall Section -->
+            <div class="content-section" id="reinstall">
+                <h3>6.2 Reinstall</h3>
+                <p>Jika GRUB rusak atau tidak berfungsi, Anda dapat menginstal ulang dengan langkah-langkah berikut:</p>
+                
+                <h4>Menggunakan Live USB</h4>
+                <ol>
+                    <li>Boot dari Live USB T4n OS</li>
+                    <li>Mount partisi root sistem yang ada:</li>
+                </ol>
+                <div class="code-block">
+                    mount /dev/sda2 /mnt
+                </div>
+                <ol start="3">
+                    <li>Mount partisi EFI (jika menggunakan UEFI):</li>
+                </ol>
+                <div class="code-block">
+                    mount /dev/sda1 /mnt/boot
+                </div>
+                <ol start="4">
+                    <li>Masuk ke lingkungan chroot:</li>
+                </ol>
+                <div class="code-block">
+                    xbps-install -S -r /mnt grub<br>
+                    chroot /mnt
+                </div>
+                <ol start="5">
+                    <li>Instal ulang GRUB:</li>
+                </ol>
+                <div class="code-block">
+                    # Untuk UEFI<br>
+                    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=T4n_OS<br>
+                    # Untuk BIOS<br>
+                    grub-install --target=i386-pc /dev/sda
+                </div>
+                <ol start="6">
+                    <li>Generate konfigurasi GRUB:</li>
+                </ol>
+                <div class="code-block">
+                    grub-mkconfig -o /boot/grub/grub.cfg
+                </div>
+                <ol start="7">
+                    <li>Keluar dari chroot dan unmount:</li>
+                </ol>
+                <div class="code-block">
+                    exit<br>
+                    umount -R /mnt<br>
+                    reboot
+                </div>
+                
+                <h4>Memperbaiki GRUB dengan Boot-Repair</h4>
+                <p>Alternatif lain adalah menggunakan Boot-Repair:</p>
+                <div class="code-block">
+                    xbps-install -S boot-repair<br>
+                    boot-repair
+                </div>
+            </div>
+            
+            <!-- Manajemen Paket Section -->
+            <div class="content-section" id="manajemen-paket">
+                <h3>7. Manajemen Paket</h3>
+                <p>T4n OS menggunakan XBPS (The X Binary Package System) sebagai manajer paket utama, dengan beberapa alat tambahan untuk kemudahan penggunaan:</p>
+                
+                <h4>Fitur XBPS</h4>
+                <ul>
+                    <li>Cepat dan efisien</li>
+                    <li>Resolusi dependensi otomatis</li>
+                    <li>Transaksi atomik</li>
+                    <li>Dukungan untuk repositori pihak ketiga</li>
+                </ul>
+                
+                <h4>Perintah Dasar XBPS</h4>
+                <div class="code-block">
+                    # Sinkronisasi repositori<br>
+                    xbps-install -S<br><br>
+                    # Instal paket<br>
+                    xbps-install -S nama_paket<br><br>
+                    # Hapus paket<br>
+                    xbps-remove -R nama_paket<br><br>
+                    # Cari paket<br>
+                    xbps-query -Rs nama_paket<br><br>
+                    # Perbarui sistem<br>
+                    xbps-install -Su
+                </div>
+                
+                <h4>Pr0gsh</h4>
+                <p>Pr0gsh adalah wrapper untuk XBPS yang menyediakan antarmuka yang lebih user-friendly:</p>
+                <div class="code-block">
+                    # Instal Pr0gsh<br>
+                    xbps-install -S pr0gsh<br><br>
+                    # Perintah Pr0gsh<br>
+                    pr0gsh install nama_paket<br>
+                    pr0gsh remove nama_paket<br>
+                    pr0gsh search nama_paket<br>
+                    pr0gsh update
+                </div>
+                
+                <h4>T4n-Man (t4nman)</h4>
+                <p>T4n-Man adalah alat manajemen paket khusus T4n OS dengan fitur tambahan:</p>
+                <div class="code-block">
+                    # Instal T4n-Man<br>
+                    xbps-install -S t4nman<br><br>
+                    # Perintah T4n-Man<br>
+                    t4nman install nama_paket<br>
+                    t4nman remove nama_paket<br>
+                    t4nman upgrade<br>
+                    t4nman clean
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Anda dapat menggunakan salah satu alat manajemen paket ini sesuai preferensi. XBPS adalah yang paling dasar, sementara Pr0gsh dan T4n-Man menawarkan kemudahan tambahan.</p>
+                </div>
+            </div>
+            
+            <!-- XBPS Section -->
+            <div class="content-section" id="xbps">
+                <h3>7.1 XBPS</h3>
+                <p>XBPS (X Binary Package System) adalah manajer paket inti dari Void Linux yang digunakan oleh T4n OS:</p>
+                
+                <h4>Perintah Dasar</h4>
+                <div class="code-block">
+                    # Sinkronisasi repositori<br>
+                    xbps-install -S<br><br>
+                    # Instal paket<br>
+                    xbps-install nama_paket<br><br>
+                    # Instal paket dari file<br>
+                    xbps-install nama_file.xbps<br><br>
+                    # Hapus paket<br>
+                    xbps-remove nama_paket<br><br>
+                    # Hapus paket dan dependensi yang tidak terpakai<br>
+                    xbps-remove -R nama_paket<br><br>
+                    # Perbarui sistem<br>
+                    xbps-install -Su<br><br>
+                    # Perbarui sistem dan hapus paket lama<br>
+                    xbps-install -Su && xbps-remove -o
+                </div>
+                
+                <h4>Mencari Paket</h4>
+                <div class="code-block">
+                    # Cari paket berdasarkan nama<br>
+                    xbps-query -Rs nama_paket<br><br>
+                    # Cari paket berdasarkan file<br>
+                    xbps-query -f /path/to/file<br><br>
+                    # Lihat informasi paket<br>
+                    xbps-query -R nama_paket
+                </div>
+                
+                <h4>Manajemen Repositori</h4>
+                <div class="code-block">
+                    # Lihat repositori yang dikonfigurasi<br>
+                    xbps-query -L<br><br>
+                    # Tambah repositori<br>
+                    xbps-install -y https://repo.example.com/current/x86_64-repodata<br><br>
+                    # Hapus repositori<br>
+                    xbps-remove -y repo_id
+                </div>
+                
+                <h4>Membersihkan Cache</h4>
+                <div class="code-block">
+                    # Hapus cache unduhan<br>
+                    xbps-remove -O<br><br>
+                    # Hapus paket lama<br>
+                    xbps-remove -o
+                </div>
+                
+                <h4>Menggunakan XBPS dengan Root</h4>
+                <p>Sebagian besar perintah XBPS memerlukan akses root. Gunakan sudo:</p>
+                <div class="code-block">
+                    sudo xbps-install -S nama_paket
+                </div>
+            </div>
+            
+            <!-- Pr0gsh Section -->
+            <div class="content-section" id="pr0gsh">
+                <h3>7.2 Pr0gsh</h3>
+                <p>Pr0gsh adalah wrapper untuk XBPS yang menyediakan antarmuka yang lebih sederhana dan user-friendly:</p>
+                
+                <h4>Instalasi</h4>
+                <div class="code-block">
+                    xbps-install -S pr0gsh
+                </div>
+                
+                <h4>Perintah Dasar</h4>
+                <div class="code-block">
+                    # Instal paket<br>
+                    pr0gsh install nama_paket<br><br>
+                    # Hapus paket<br>
+                    pr0gsh remove nama_paket<br><br>
+                    # Perbarui sistem<br>
+                    pr0gsh update<br><br>
+                    # Perbarui sistem dan hapus paket lama<br>
+                    pr0gsh upgrade<br><br>
+                    # Cari paket<br>
+                    pr0gsh search nama_paket<br><br>
+                    # Lihat informasi paket<br>
+                    pr0gsh info nama_paket
+                </div>
+                
+                <h4>Fitur Tambahan</h4>
+                <ul>
+                    <li>Progress bar yang lebih informatif</li>
+                    <li>Output yang lebih bersih dan terstruktur</li>
+                    <li>Auto-completion untuk nama paket</li>
+                    <li>History perintah</li>
+                </ul>
+                
+                <h4>Konfigurasi</h4>
+                <p>Pr0gsh dapat dikonfigurasi melalui file <code>~/.config/pr0gsh/config</code>:</p>
+                <div class="code-block">
+                    # Contoh konfigurasi<br>
+                    [core]<br>
+                    color = true<br>
+                    progress = true<br>
+                    confirm = true
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Keuntungan:</strong> Pr0gsh sangat cocok untuk pengguna baru yang ingin menggunakan XBPS dengan antarmuka yang lebih sederhana.</p>
+                </div>
+            </div>
+            
+            <!-- T4n-Man Section -->
+            <div class="content-section" id="t4nman">
+                <h3>7.3 T4n-Man</h3>
+                <p>T4n-Man (t4nman) adalah alat manajemen paket khusus T4n OS yang dikembangkan untuk menyederhanakan proses instalasi dan pemeliharaan sistem:</p>
+                
+                <h4>Instalasi</h4>
+                <div class="code-block">
+                    xbps-install -S t4nman
+                </div>
+                
+                <h4>Perintah Dasar</h4>
+                <div class="code-block">
+                    # Instal paket<br>
+                    t4nman install nama_paket<br><br>
+                    # Hapus paket<br>
+                    t4nman remove nama_paket<br><br>
+                    # Perbarui sistem<br>
+                    t4nman update<br><br>
+                    # Perbarui semua paket<br>
+                    t4nman upgrade<br><br>
+                    # Cari paket<br>
+                    t4nman search nama_paket<br><br>
+                    # Lihat informasi paket<br>
+                    t4nman info nama_paket
+                </div>
+                
+                <h4>Fitur Khusus T4n-Man</h4>
+                <ul>
+                    <li>Deteksi otomatis driver hardware</li>
+                    <li>Instalasi grup paket (misal: "desktop", "development")</li>
+                    <li>Manajemen service otomatis</li>
+                    <li>Cleanup sistem otomatis</li>
+                    <li>Integrasi dengan repositori T4n OS</li>
+                </ul>
+                
+                <h4>Grup Paket</h4>
+                <div class="code-block">
+                    # Instal grup paket desktop<br>
+                    t4nman install desktop<br><br>
+                    # Instal grup paket development<br>
+                    t4nman install development<br><br>
+                    # Lihat grup yang tersedia<br>
+                    t4nman list-groups
+                </div>
+                
+                <h4>Manajemen Service</h4>
+                <div class="code-block">
+                    # Aktifkan service<br>
+                    t4nman enable nama_service<br><br>
+                    # Nonaktifkan service<br>
+                    t4nman disable nama_service<br><br>
+                    # Lihat status service<br>
+                    t4nman status nama_service
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Rekomendasi:</strong> T4n-Man adalah alat yang paling direkomendasikan untuk pengguna T4n OS karena integrasinya yang erat dengan sistem.</p>
+                </div>
+            </div>
+            
+            <!-- Kernel Section -->
+            <div class="content-section" id="kernel">
+                <h3>8. Kernel</h3>
+                <p>T4n OS mendukung beberapa kernel Linux yang dapat dipilih sesuai kebutuhan:</p>
+                
+                <h4>Kernel yang Tersedia</h4>
+                <ul>
+                    <li>Linux LTS (Long Term Support) - Stabilitas maksimal</li>
+                    <li>Linux Zen - Performa tinggi dengan optimasi desktop</li>
+                    <li>Linux Default - Versi terbaru dengan fitur terkini</li>
+                </ul>
+                
+                <h4>Memeriksa Kernel Saat Ini</h4>
+                <div class="code-block">
+                    uname -r
+                </div>
+                
+                <h4>Menginstal Kernel Baru</h4>
+                <div class="code-block">
+                    # Instal kernel LTS<br>
+                    xbps-install -S linux-lts<br><br>
+                    # Instal kernel Zen<br>
+                    xbps-install -S linux-zen<br><br>
+                    # Instal kernel default<br>
+                    xbps-install -S linux
+                </div>
+                
+                <h4>Menghapus Kernel</h4>
+                <div class="code-block">
+                    # Hapus kernel<br>
+                    xbps-remove -R linux-lts
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Penting:</strong> Pastikan Anda memiliki setidaknya satu kernel yang berfungsi sebelum menghapus kernel yang sedang digunakan.</p>
+                </div>
+            </div>
+            
+            <!-- Kernel LTS Section -->
+            <div class="content-section" id="kernel-lts">
+                <h3>8.1 Kernel Linux LTS</h3>
+                <p>Kernel Linux LTS (Long Term Support) adalah pilihan yang direkomendasikan untuk stabilitas dan dukungan jangka panjang:</p>
+                
+                <h4>Keuntungan Kernel LTS</h4>
+                <ul>
+                    <li>Dukungan jangka panjang (biasanya 2-6 tahun)</li>
+                    <li>Stabilitas tinggi dengan perbaikan bug reguler</li>
+                    <li>Kompatibilitas hardware yang luas</li>
+                    <li>Cocok untuk sistem produksi dan server</li>
+                </ul>
+                
+                <h4>Instalasi</h4>
+                <div class="code-block">
+                    xbps-install -S linux-lts linux-lts-headers
+                </div>
+                
+                <h4>Konfigurasi</h4>
+                <p>Setelah instalasi, update GRUB untuk menambahkan kernel baru:</p>
+                <div class="code-block">
+                    grub-mkconfig -o /boot/grub/grub.cfg
+                </div>
+                
+                <h4>Reboot ke Kernel LTS</h4>
+                <p>Reboot sistem dan pilih kernel LTS dari menu GRUB:</p>
+                <div class="code-block">
+                    reboot
+                </div>
+                
+                <h4>Verifikasi</h4>
+                <div class="code-block">
+                    uname -r
+                </div>
+                
+                <h4>Set sebagai Default</h4>
+                <p>Untuk membuat kernel LTS sebagai default, edit <code>/etc/default/grub</code>:</p>
+                <div class="code-block">
+                    GRUB_DEFAULT=saved<br>
+                    GRUB_SAVEDEFAULT=true
+                </div>
+                <p>Kemudian jalankan kembali <code>grub-mkconfig</code>.</p>
+                
+                <div class="note-box">
+                    <p><strong>Rekomendasi:</strong> Kernel LTS adalah pilihan terbaik untuk sebagian besar pengguna yang mengutamakan stabilitas daripada fitur terbaru.</p>
+                </div>
+            </div>
+            
+            <!-- Kernel Zen Section -->
+            <div class="content-section" id="kernel-zen">
+                <h3>8.2 Kernel Zen</h3>
+                <p>Kernel Zen adalah kernel Linux yang dioptimalkan untuk performa desktop dan pengalaman pengguna yang lebih baik:</p>
+                
+                <h4>Fitur Kernel Zen</h4>
+                <ul>
+                    <li>Optimasi untuk latensi rendah</li>
+                    <li>Scheduling CPU yang lebih baik untuk desktop</li>
+                    <li>Peningkatan performa I/O</li>
+                    <li>Patch khusus untuk gaming dan multimedia</li>
+                </ul>
+                
+                <h4>Instalasi</h4>
+                <div class="code-block">
+                    xbps-install -S linux-zen linux-zen-headers
+                </div>
+                
+                <h4>Konfigurasi</h4>
+                <p>Setelah instalasi, update GRUB:</p>
+                <div class="code-block">
+                    grub-mkconfig -o /boot/grub/grub.cfg
+                </div>
+                
+                <h4>Reboot ke Kernel Zen</h4>
+                <div class="code-block">
+                    reboot
+                </div>
+                
+                <h4>Verifikasi</h4>
+                <div class="code-block">
+                    uname -r
+                </div>
+                
+                <h4>Perbandingan dengan Kernel Lain</h4>
+                <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+                    <tr style="background-color: var(--bg-secondary);">
+                        <th style="padding: 10px; border: 1px solid var(--border-color); text-align: left;">Fitur</th>
+                        <th style="padding: 10px; border: 1px solid var(--border-color); text-align: left;">Kernel LTS</th>
+                        <th style="padding: 10px; border: 1px solid var(--border-color); text-align: left;">Kernel Zen</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Stabilitas</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Tinggi</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Sedang</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Performa Desktop</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Standar</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Tinggi</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Dukungan Hardware</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Luas</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Sedang</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Dukungan Jangka Panjang</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Ya</td>
+                        <td style="padding: 10px; border: 1px solid var(--border-color);">Tidak</td>
+                    </tr>
+                </table>
+                
+                <div class="note-box">
+                    <p><strong>Untuk Siapa:</strong> Kernel Zen cocok untuk pengguna yang menginginkan performa desktop maksimal dan tidak masalah dengan update yang lebih sering.</p>
+                </div>
+            </div>
+            
+            <!-- Permasalahan Section -->
+            <div class="content-section" id="permasalahan">
+                <h3>9. Permasalahan</h3>
+                <p>Berikut adalah beberapa masalah umum yang mungkin dihadapi saat menggunakan T4n OS dan solusinya:</p>
+                
+                <h4>Audio Tidak Berfungsi</h4>
+                <p>Jika audio tidak berfungsi setelah instalasi:</p>
+                <div class="code-block">
+                    # Periksa service audio<br>
+                    sv status alsa<br><br>
+                    # Aktifkan service audio<br>
+                    ln -s /etc/sv/alsa /var/service/<br><br>
+                    # Periksa volume<br>
+                    alsamixer<br><br>
+                    # Instal driver audio tambahan jika diperlukan<br>
+                    xbps-install -S alsa-utils pulseaudio
+                </div>
+                
+                <h4>SDDM Tidak Muncul</h4>
+                <p>Jika SDDM tidak muncul setelah boot:</p>
+                <div class="code-block">
+                    # Periksa service SDDM<br>
+                    sv status sddm<br><br>
+                    # Aktifkan service SDDM<br>
+                    ln -s /etc/sv/sddm /var/service/<br><br>
+                    # Periksa log<br>
+                    tail -f /var/log/sddm.log
+                </div>
+                
+                <h4>Masalah XBPS</h4>
+                <p>Jika XBPS mengalami masalah:</p>
+                <div class="code-block">
+                    # Perbaiki database paket<br>
+                    xbps-install -y --force<br><br>
+                    # Hapus cache dan rebuild<br>
+                    xbps-remove -O && xbps-pkgdb -m<br><br>
+                    # Perbarui sistem paksa<br>
+                    xbps-install -Su --force
+                </div>
+                
+                <h4>Masalah T4n-Man</h4>
+                <p>Jika T4n-Man tidak berfungsi:</p>
+                <div class="code-block">
+                    # Perbarui T4n-Man<br>
+                    xbps-install -Su t4nman<br><br>
+                    # Reset konfigurasi<br>
+                    rm -f ~/.config/t4nman/config<br><br>
+                    # Jalankan di mode verbose<br>
+                    t4nman --verbose install nama_paket
+                </div>
+                
+                <h4>Masalah Pr0gsh</h4>
+                <p>Jika Pr0gsh mengalami error:</p>
+                <div class="code-block">
+                    # Perbarui Pr0gsh<br>
+                    xbps-install -Su pr0gsh<br><br>
+                    # Periksa dependensi<br>
+                    xbps-query -Rx pr0gsh<br><br>
+                    # Gunakan XBPS langsung sebagai alternatif<br>
+                    xbps-install -S nama_paket
+                </div>
+                
+                <h4>Masalah Partisi</h4>
+                <p>Jika ada masalah dengan partisi:</p>
+                <div class="code-block">
+                    # Periksa partisi<br>
+                    fdisk -l<br><br>
+                    # Periksa filesystem<br>
+                    fsck /dev/sda2<br><br>
+                    # Mount manual untuk debugging<br>
+                    mount /dev/sda2 /mnt<br>
+                    # Periksa log sistem<br>
+                    dmesg | grep -i error
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Bantuan:</strong> Jika masalah berlanjut, kunjungi forum komunitas T4n OS atau channel support untuk bantuan lebih lanjut.</p>
+                </div>
+            </div>
+            
+            <!-- Audio Section -->
+            <div class="content-section" id="audio">
+                <h3>9.1 Audio</h3>
+                <p>Berikut adalah panduan lengkap untuk memperbaiki masalah audio di T4n OS:</p>
+                
+                <h4>Langkah 1: Periksa Hardware</h4>
+                <div class="code-block">
+                    # Periksa kartu audio yang terdeteksi<br>
+                    aplay -l<br><br>
+                    # Periksa perangkat audio<br>
+                    lspci -v | grep -i audio
+                </div>
+                
+                <h4>Langkah 2: Instal Driver Audio</h4>
+                <div class="code-block">
+                    # Instal paket audio dasar<br>
+                    xbps-install -S alsa-utils pulseaudio pulseaudio-alsa<br><br>
+                    # Untuk laptop, instal tambahan<br>
+                    xbps-install -S sof-firmware
+                </div>
+                
+                <h4>Langkah 3: Aktifkan Service</h4>
+                <div class="code-block">
+                    # Aktifkan service ALSA<br>
+                    ln -s /etc/sv/alsa /var/service/<br>
+                    sv up alsa<br><br>
+                    # Untuk PulseAudio (jika digunakan)<br>
+                    systemctl --user enable pulseaudio<br>
+                    systemctl --user start pulseaudio
+                </div>
+                
+                <h4>Langkah 4: Periksa Volume</h4>
+                <div class="code-block">
+                    # Buka mixer ALSA<br>
+                    alsamixer<br><br>
+                    # Pastikan tidak ada yang muted (MM) dan volume cukup<br>
+                    # Keluar dengan ESC
+                </div>
+                
+                <h4>Langkah 5: Test Audio</h4>
+                <div class="code-block">
+                    # Test dengan speaker-test<br>
+                    speaker-test -c 2 -l 1 -t wav<br><br>
+                    # Test dengan aplay<br>
+                    aplay /usr/share/sounds/alsa/Front_Center.wav
+                </div>
+                
+                <h4>Langkah 6: Konfigurasi PulseAudio (Opsional)</h4>
+                <p>Jika menggunakan PulseAudio, buat file konfigurasi:</p>
+                <div class="code-block">
+                    mkdir -p ~/.config/pulse<br>
+                    echo "default-sink = alsa_output.pci-0000_00_1b.0.analog-stereo" > ~/.config/pulse/default.pa
+                </div>
+                
+                <h4>Langkah 7: Periksa Aplikasi</h4>
+                <p>Beberapa aplikasi mungkin memerlukan konfigurasi tambahan:</p>
+                <div class="code-block">
+                    # Untuk Firefox<br>
+                    about:config -> set media.cubeb.backend to pulse<br><br>
+                    # Untuk VLC<br>
+                    Tools -> Preferences -> Audio -> Output module -> Pulseaudio
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Jika audio masih tidak berfungsi, coba reboot sistem setelah menginstal driver dan mengaktifkan service.</p>
+                </div>
+            </div>
+            
+            <!-- SDDM Section -->
+            <div class="content-section" id="sddm">
+                <h3>9.2 SDDM</h3>
+                <p>SDDM (Simple Desktop Display Manager) adalah display manager default di T4n OS. Berikut adalah solusi untuk masalah umum:</p>
+                
+                <h4>SDDM Tidak Muncul Setelah Boot</h4>
+                <div class="code-block">
+                    # Periksa status service SDDM<br>
+                    sv status sddm<br><br>
+                    # Jika tidak aktif, aktifkan<br>
+                    ln -s /etc/sv/sddm /var/service/<br>
+                    sv up sddm
+                </div>
+                
+                <h4>SDDM Muncul Tapi Tidak Bisa Login</h4>
+                <div class="code-block">
+                    # Periksa log SDDM<br>
+                    tail -f /var/log/sddm.log<br><br>
+                    # Periksa log Xorg<br>
+                    tail -f /var/log/Xorg.0.log<br><br>
+                    # Periksa permission home directory<br>
+                    ls -la /home/username
+                </div>
+                
+                <h4>Error "No Session Found"</h4>
+                <div class="code-block">
+                    # Periksa file session<br>
+                    ls /usr/share/xsessions/<br>
+                    ls /usr/share/wayland-sessions/<br><br>
+                    # Instal desktop environment jika belum<br>
+                    xbps-install -S xfce4 xfce4-goodies
+                </div>
+                
+                <h4>SDDM Crash atau Freeze</h4>
+                <div class="code-block">
+                    # Hapus cache SDDM<br>
+                    rm -rf /var/cache/sddm/*<br><br>
+                    # Restart service<br>
+                    sv restart sddm<br><br>
+                    # Periksa konfigurasi<br>
+                    cat /etc/sddm.conf
+                </div>
+                
+                <h4>Reservasi SDDM</h4>
+                <p>Jika masalah berlanjut, coba reinstall SDDM:</p>
+                <div class="code-block">
+                    # Hapus SDDM<br>
+                    xbps-remove -R sddm<br><br>
+                    # Hapus konfigurasi residual<br>
+                    rm -rf /etc/sddm.conf*<br><br>
+                    # Instal ulang<br>
+                    xbps-install -S sddm<br><br>
+                    # Konfigurasi ulang<br>
+                    ln -s /etc/sv/sddm /var/service/
+                </div>
+                
+                <h4>Menggunakan Display Manager Lain</h4>
+                <p>Jika SDDM terus bermasalah, coba display manager lain:</p>
+                <div class="code-block">
+                    # Instal LightDM<br>
+                    xbps-install -S lightdm lightdm-gtk-greeter<br><br>
+                    # Nonaktifkan SDDM<br>
+                    sv down sddm<br>
+                    rm /var/service/sddm<br><br>
+                    # Aktifkan LightDM<br>
+                    ln -s /etc/sv/lightdm /var/service/<br>
+                    sv up lightdm
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Debugging:</strong> Untuk debugging lebih lanjut, jalankan SDDM secara manual dengan <code>sddm --test-mode</code> untuk melihat error yang terjadi.</p>
+                </div>
+            </div>
+            
+            <!-- XBPS Issue Section -->
+            <div class="content-section" id="xbps-issue">
+                <h3>9.3 XBPS</h3>
+                <p>Berikut adalah solusi untuk masalah umum dengan XBPS (X Binary Package System):</p>
+                
+                <h4>Error "Database Locked"</h4>
+                <div class="code-block">
+                    # Hapus lock file<br>
+                    rm -f /var/db/xbps/.lock<br><br>
+                    # Coba lagi operasi XBPS<br>
+                    xbps-install -S
+                </div>
+                
+                <h4>Error "Signature Verification Failed"</h4>
+                <div class="code-block">
+                    # Perbarui keyring<br>
+                    xbps-install -S void-repo-nonfree<br><br>
+                    # Atau impor manual<br>
+                    xbps-install -y --force https://repo.voidlinux.org/current/x86_64-repodata
+                </div>
+                
+                <h4>Error "Package Not Found"</h4>
+                <div class="code-block">
+                    # Periksa ejaan nama paket<br>
+                    xbps-query -Rs nama_paket<br><br>
+                    # Periksa repositori yang tersedia<br>
+                    xbps-query -L<br><br>
+                    # Tambah repositori jika diperlukan<br>
+                    xbps-install -y https://repo.example.com/current/x86_64-repodata
+                </div>
+                
+                <h4>Error "Unresolvable Dependencies"</h4>
+                <div class="code-block">
+                    # Perbarui sistem terlebih dahulu<br>
+                    xbps-install -Su<br><br>
+                    # Coba instal paket lagi<br>
+                    xbps-install -S nama_paket<br><br>
+                    # Jika masih gagal, coba instal dengan --force<br>
+                    xbps-install -S --force nama_paket
+                </div>
+                
+                <h4>XBPS Sangat Lambat</h4>
+                <div class="code-block">
+                    # Ganti mirror ke yang lebih dekat<br>
+                    # Edit /etc/xbps.d/00-repo-main.conf<br>
+                    echo "repository=https://mirror.voidlinux.org/current" > /etc/xbps.d/00-repo-main.conf<br><br>
+                    # Hapus cache<br>
+                    xbps-remove -O<br><br>
+                    # Perbarui database<br>
+                    xbps-install -S
+                </div>
+                
+                <h4>Rebuild Database XBPS</h4>
+                <p>Jika database rusak parah:</p>
+                <div class="code-block">
+                    # Backup database lama<br>
+                    cp -r /var/db/xbps /var/db/xbps.bak<br><br>
+                    # Hapus database<br>
+                    rm -rf /var/db/xbps/*<br><br>
+                    # Reinstall xbps<br>
+                    xbps-install -y --force xbps<br><br>
+                    # Sinkronisasi ulang<br>
+                    xbps-install -S
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Sebagian besar masalah XBPS dapat diselesaikan dengan memperbarui sistem (<code>xbps-install -Su</code>) atau membersihkan cache (<code>xbps-remove -O</code>).</p>
+                </div>
+            </div>
+            
+            <!-- T4n-Man Issue Section -->
+            <div class="content-section" id="t4nman-issue">
+                <h3>9.4 T4n-Man</h3>
+                <p>Berikut adalah solusi untuk masalah umum dengan T4n-Man (t4nman):</p>
+                
+                <h4>T4n-Man Tidak Ditemukan</h4>
+                <div class="code-block">
+                    # Periksa apakah terinstal<br>
+                    which t4nman<br><br>
+                    # Jika tidak, instal<br>
+                    xbps-install -S t4nman
+                </div>
+                
+                <h4>Error "Command Not Found"</h4>
+                <div class="code-block">
+                    # Periksa PATH<br>
+                    echo $PATH<br><br>
+                    # Tambahkan ke PATH jika perlu<br>
+                    export PATH=$PATH:/usr/local/bin<br>
+                    echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
+                </div>
+                
+                <h4>T4n-Man Crash atau Error</h4>
+                <div class="code-block">
+                    # Jalankan di mode verbose<br>
+                    t4nman --verbose install nama_paket<br><br>
+                    # Periksa log<br>
+                    tail -f ~/.local/share/t4nman/t4nman.log<br><br>
+                    # Reset konfigurasi<br>
+                    rm -f ~/.config/t4nman/config
+                </div>
+                
+                <h4>Install Gagal</h4>
+                <div class="code-block">
+                    # Perbarui T4n-Man<br>
+                    xbps-install -Su t4nman<br><br>
+                    # Coba dengan XBPS langsung<br>
+                    xbps-install -S nama_paket<br><br>
+                    # Periksa koneksi internet<br>
+                    ping repo.voidlinux.org
+                </div>
+                
+                <h4>Grup Paket Tidak Ditemukan</h4>
+                <div class="code-block">
+                    # Lihat grup yang tersedia<br>
+                    t4nman list-groups<br><br>
+                    # Perbarui daftar grup<br>
+                    t4nman update-groups<br><br>
+                    # Jika masih tidak ada, instal manual<br>
+                    xbps-install -S nama_paket1 nama_paket2 nama_paket3
+                </div>
+                
+                <h4>Service Tidak Terkelola dengan Benar</h4>
+                <div class="code-block">
+                    # Periksa status service<br>
+                    sv status nama_service<br><br>
+                    # Aktifkan manual dengan sv<br>
+                    ln -s /etc/sv/nama_service /var/service/<br>
+                    sv up nama_service<br><br>
+                    # Periksa log<br>
+                    tail -f /var/log/nama_service/log
+                </div>
+                
+                <h4>Uninstall T4n-Man</h4>
+                <p>Jika Anda ingin kembali menggunakan XBPS langsung:</p>
+                <div class="code-block">
+                    # Hapus T4n-Man<br>
+                    xbps-remove -R t4nman<br><br>
+                    # Hapus konfigurasi<br>
+                    rm -rf ~/.config/t4nman ~/.local/share/t4nman
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Alternatif:</strong> Jika T4n-Man terus bermasalah, Anda dapat menggunakan XBPS langsung atau Pr0gsh sebagai alternatif.</p>
+                </div>
+            </div>
+            
+            <!-- Pr0gsh Issue Section -->
+            <div class="content-section" id="pr0gsh-issue">
+                <h3>9.5 Pr0gsh</h3>
+                <p>Berikut adalah solusi untuk masalah umum dengan Pr0gsh:</p>
+                
+                <h4>Pr0gsh Tidak Berjalan</h4>
+                <div class="code-block">
+                    # Periksa instalasi<br>
+                    which pr0gsh<br><br>
+                    # Jika tidak ada, instal<br>
+                    xbps-install -S pr0gsh
+                </div>
+                
+                <h4>Error "Permission Denied"</h4>
+                <div class="code-block">
+                    # Gunakan sudo untuk operasi yang memerlukan root<br>
+                    sudo pr0gsh install nama_paket<br><br>
+                    # Atau tambahkan user ke grup wheel<br>
+                    usermod -aG wheel username
+                </div>
+                
+                <h4>Pr0gsh Crash atau Freeze</h4>
+                <div class="code-block">
+                    # Perbarui Pr0gsh<br>
+                    xbps-install -Su pr0gsh<br><br>
+                    # Jalankan dengan debug<br>
+                    pr0gsh --debug install nama_paket<br><br>
+                    # Periksa log sistem<br>
+                    dmesg | tail
+                </div>
+                
+                <h4>Progress Bar Tidak Muncul</h4>
+                <div class="code-block">
+                    # Periksa konfigurasi<br>
+                    cat ~/.config/pr0gsh/config<br><br>
+                    # Pastikan opsi progress diaktifkan<br>
+                    echo "progress=true" >> ~/.config/pr0gsh/config<br><br>
+                    # Atau jalankan dengan opsi<br>
+                    pr0gsh --progress install nama_paket
+                </div>
+                
+                <h4>Install Gagal dengan Error Tidak Jelas</h4>
+                <div class="code-block">
+                    # Coba dengan XBPS langsung untuk melihat error sebenarnya<br>
+                    xbps-install -S nama_paket<br><br>
+                    # Periksa dependensi yang hilang<br>
+                    xbps-query -Rx nama_paket<br><br>
+                    # Periksa koneksi internet<br>
+                    ping repo.voidlinux.org
+                </div>
+                
+                <h4>Pr0gsh Tidak Menemukan Paket</h4>
+                <div class="code-block">
+                    # Perbarui database paket<br>
+                    pr0gsh update<br><br>
+                    # Cari dengan nama yang lebih spesifik<br>
+                    pr0gsh search kata_kunci<br><br>
+                    # Atau gunakan XBPS query<br>
+                    xbps-query -Rs kata_kunci
+                </div>
+                
+                <h4>Uninstall Pr0gsh</h4>
+                <p>Jika Anda ingin kembali ke XBPS murni:</p>
+                <div class="code-block">
+                    # Hapus Pr0gsh<br>
+                    xbps-remove -R pr0gsh<br><br>
+                    # Hapus konfigurasi<br>
+                    rm -rf ~/.config/pr0gsh
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Tip:</strong> Pr0gsh adalah wrapper untuk XBPS, jadi sebagian besar operasi dapat dilakukan langsung dengan XBPS jika Pr0gsh bermasalah.</p>
+                </div>
+            </div>
+            
+            <!-- Partisi Issue Section -->
+            <div class="content-section" id="partisi-issue">
+                <h3>9.6 Partisi</h3>
+                <p>Berikut adalah solusi untuk masalah umum terkait partisi di T4n OS:</p>
+                
+                <h4>Partisi Tidak Terdeteksi</h4>
+                <div class="code-block">
+                    # Periksa disk yang tersedia<br>
+                    fdisk -l<br><br>
+                    # Periksa kernel messages<br>
+                    dmesg | grep -i disk<br><br>
+                    # Untuk USB/NVMe, periksa modul<br>
+                    lsmod | grep -E '(usb|nvme)'
+                </div>
+                
+                <h4>Filesystem Rusak</h4>
+                <div class="code-block">
+                    # Periksa filesystem<br>
+                    fsck /dev/sdaX<br><br>
+                    # Untuk perbaikan otomatis (hati-hati)<br>
+                    fsck -y /dev/sdaX<br><br>
+                    # Untuk filesystem ext4<br>
+                    e2fsck -f /dev/sdaX
+                </div>
+                
+                <h4>Partisi Tidak Bisa Dimount</h4>
+                <div class="code-block">
+                    # Coba mount manual<br>
+                    mount /dev/sdaX /mnt<br><br>
+                    # Periksa error<br>
+                    dmesg | tail<br><br>
+                    # Periksa filesystem<br>
+                    blkid /dev/sdaX<br><br>
+                    # Jika filesystem tidak dikenali, coba format ulang<br>
+                    mkfs.ext4 /dev/sdaX
+                </div>
+                
+                <h4>Ruang Disk Penuh</h4>
+                <div class="code-block">
+                    # Periksa penggunaan disk<br>
+                    df -h<br><br>
+                    # Cari file besar<br>
+                    find / -type f -size +100M -exec ls -lh {} \;<br><br>
+                    # Hapus cache paket<br>
+                    xbps-remove -O<br><br>
+                    # Hapus log lama<br>
+                    journalctl --vacuum-size=100M
+                </div>
+                
+                <h4>Error "No Space Left on Device" Meskipun Ada Ruang</h4>
+                <div class="code-block">
+                    # Periksa inode<br>
+                    df -i<br><br>
+                    # Hapus file kecil banyak<br>
+                    find /tmp -type f -delete<br><br>
+                    # Periksa quota (jika digunakan)<br>
+                    quota -u username
+                </div>
+                
+                <h4>Partisi Tidak Muncul di File Manager</h4>
+                <div class="code-block">
+                    # Periksa apakah sudah dimount<br>
+                    mount | grep /dev/sdaX<br><br>
+                    # Mount manual<br>
+                    sudo mount /dev/sdaX /mnt<br><br>
+                    # Untuk mount otomatis, edit /etc/fstab<br>
+                    echo "/dev/sdaX /mnt ext4 defaults 0 0" >> /etc/fstab
+                </div>
+                
+                <h4>Memperbesar Partisi</h4>
+                <p>Untuk memperbesar partisi (misal setelah menambah ruang disk):</p>
+                <div class="code-block">
+                    # Untuk partisi yang tidak sedang digunakan<br>
+                    growpart /dev/sda 2<br><br>
+                    # Perbesar filesystem<br>
+                    resize2fs /dev/sda2<br><br>
+                    # Untuk filesystem Btrfs<br>
+                    btrfs filesystem resize max /mount/point
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Peringatan:</strong> Operasi partisi berisiko tinggi. Selalu backup data penting sebelum melakukan operasi partisi.</p>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2025 T4n OS Wiki. Dokumentasi resmi untuk T4n OS.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Function
+        function setTheme(theme) {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+            const icon = themeToggle.querySelector('i');
+            const iconMobile = themeToggleMobile.querySelector('i');
+            
+            if (theme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                iconMobile.classList.remove('fa-moon');
+                iconMobile.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                iconMobile.classList.remove('fa-sun');
+                iconMobile.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // Initialize theme from localStorage or system preference
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // Check system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme('dark');
+                } else {
+                    setTheme('light');
+                }
+            }
+        }
+        
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const mainContent = document.getElementById('main-content');
+        const menuIcon = menuToggle.querySelector('i');
+        
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('mobile-open');
+            sidebarOverlay.classList.toggle('active');
+            mainContent.classList.toggle('mobile-open');
+            
+            // Change menu icon
+            if (sidebar.classList.contains('mobile-open')) {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        }
+        
+        menuToggle.addEventListener('click', toggleMobileMenu);
+        sidebarOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Menu Navigation
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const subMenuLinks = document.querySelectorAll('.sub-menu-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const sectionTitle = document.getElementById('section-title');
+        
+        function showSection(sectionId) {
+            // Hide all sections
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                
+                // Update section title
+                const title = selectedSection.querySelector('h3');
+                if (title) {
+                    sectionTitle.textContent = title.textContent;
+                }
+            }
+            
+            // Update active menu
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            subMenuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                    
+                    // Also activate parent menu
+                    const parentLi = link.closest('li');
+                    if (parentLi) {
+                        const parentUl = parentLi.parentElement;
+                        if (parentUl && parentUl.parentElement) {
+                            const parentLink = parentUl.parentElement.querySelector('.menu-link, .sub-menu-link');
+                            if (parentLink) {
+                                parentLink.classList.add('active');
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Close mobile menu after navigation
+            if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                toggleMobileMenu();
+            }
+        }
+        
+        // Add click event to menu links
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+        
+        // Add click event to sub-menu links
+        subMenuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+        
+        // Add event listeners to theme toggle buttons
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+        
+        document.getElementById('theme-toggle-mobile').addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth > 768) {
+                    // Reset mobile menu state on desktop
+                    sidebar.classList.remove('mobile-open');
+                    sidebarOverlay.classList.remove('active');
+                    mainContent.classList.remove('mobile-open');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                }
+            }, 250);
+        });
+        
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        sidebar.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        sidebar.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left - close sidebar on mobile
+                if (window.innerWidth <= 768 && sidebar.classList.contains('mobile-open')) {
+                    toggleMobileMenu();
+                }
+            }
+        }
+        
+        // Add keyboard navigation support
+        document.addEventListener('keydown', (e) => {
+            // Escape key to close mobile menu
+            if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
+                toggleMobileMenu();
+            }
+            
+            // Ctrl/Cmd + K for quick search (placeholder for future search functionality)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                // Future search functionality can be added here
+                console.log('Quick search activated');
+            }
+        });
+        
+        // Detect device capabilities for better UX
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isTouchDevice) {
+            document.body.classList.add('touch-device');
+        }
+        
+        if (isMobile) {
+            document.body.classList.add('mobile-device');
+        }
+        
+        // Performance optimization: Lazy load images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+        
+        // Add print functionality
+        window.addEventListener('beforeprint', () => {
+            // Prepare document for printing
+            document.body.classList.add('printing');
+        });
+        
+        window.addEventListener('afterprint', () => {
+            // Restore document after printing
+            document.body.classList.remove('printing');
+        });
+        
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            colorSchemeQuery.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+        
+        // Initialize theme when page loads
+        document.addEventListener('DOMContentLoaded', initializeTheme);
+    </script>
+</body>
+</html>

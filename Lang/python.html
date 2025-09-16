@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Python - Tutorial Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <style>
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Sidebar transitions */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Code editor styles */
+        .code-editor {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 200px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Hover effects */
+        .lesson-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Dark mode styles - comprehensive fix */
+        body.dark {
+            background-color: #111827 !important;
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .bg-white {
+            background-color: #1f2937 !important;
+        }
+        
+        body.dark .bg-gray-50 {
+            background-color: #111827 !important;
+        }
+        
+        body.dark .bg-gray-100 {
+            background-color: #1f2937 !important;
+        }
+        
+        body.dark .bg-gray-200 {
+            background-color: #374151 !important;
+        }
+        
+        body.dark .bg-gray-300 {
+            background-color: #4b5563 !important;
+        }
+        
+        body.dark .bg-gray-700 {
+            background-color: #374151 !important;
+        }
+        
+        body.dark .bg-gray-800 {
+            background-color: #1f2937 !important;
+        }
+        
+        body.dark .bg-gray-900 {
+            background-color: #111827 !important;
+        }
+        
+        body.dark .bg-blue-50 {
+            background-color: #1e3a5f !important;
+        }
+        
+        body.dark .bg-green-50 {
+            background-color: #064e3b !important;
+        }
+        
+        body.dark .bg-yellow-50 {
+            background-color: #78350f !important;
+        }
+        
+        body.dark .bg-purple-50 {
+            background-color: #4c1d95 !important;
+        }
+        
+        body.dark .bg-orange-50 {
+            background-color: #7c2d12 !important;
+        }
+        
+        body.dark .bg-cyan-50 {
+            background-color: #164e63 !important;
+        }
+        
+        body.dark .bg-indigo-50 {
+            background-color: #312e81 !important;
+        }
+        
+        body.dark .text-gray-900 {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .text-gray-600 {
+            color: #9ca3af !important;
+        }
+        
+        body.dark .text-gray-400 {
+            color: #9ca3af !important;
+        }
+        
+        body.dark .text-green-600 {
+            color: #34d399 !important;
+        }
+        
+        body.dark .text-red-600 {
+            color: #f87171 !important;
+        }
+        
+        body.dark .text-yellow-800 {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .text-green-800 {
+            color: #34d399 !important;
+        }
+        
+        body.dark .text-red-800 {
+            color: #f87171 !important;
+        }
+        
+        body.dark .border-gray-300 {
+            border-color: #4b5563 !important;
+        }
+        
+        body.dark .border-gray-600 {
+            border-color: #4b5563 !important;
+        }
+        
+        body.dark .hover\:bg-gray-100:hover {
+            background-color: #374151 !important;
+        }
+        
+        body.dark .hover\:bg-gray-700:hover {
+            background-color: #4b5563 !important;
+        }
+        
+        body.dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        body.dark .shadow-md {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        body.dark .prose {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .prose h1, 
+        body.dark .prose h2, 
+        body.dark .prose h3 {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .prose p {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark .prose ul, 
+        body.dark .prose ol {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark .prose li {
+            color: #e5e7eb !important;
+        }
+        
+        body.dark .prose strong {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .prose code {
+            color: #f3f4f6 !important;
+            background-color: #374151 !important;
+        }
+        
+        body.dark pre {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        body.dark pre[class*="language-"] {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        
+        body.dark code[class*="language-"] {
+            background-color: transparent !important;
+            color: #e2e8f0 !important;
+            text-shadow: none !important;
+        }
+        
+        body.dark .token.comment,
+        body.dark .token.prolog,
+        body.dark .token.doctype,
+        body.dark .token.cdata {
+            color: #6b7280 !important;
+        }
+        
+        body.dark .token.punctuation {
+            color: #e2e8f0 !important;
+        }
+        
+        body.dark .token.property,
+        body.dark .token.tag,
+        body.dark .token.boolean,
+        body.dark .token.number,
+        body.dark .token.constant,
+        body.dark .token.symbol,
+        body.dark .token.deleted {
+            color: #f87171 !important;
+        }
+        
+        body.dark .token.selector,
+        body.dark .token.attr-name,
+        body.dark .token.string,
+        body.dark .token.char,
+        body.dark .token.builtin,
+        body.dark .token.inserted {
+            color: #34d399 !important;
+        }
+        
+        body.dark .token.operator,
+        body.dark .token.entity,
+        body.dark .token.url,
+        body.dark .language-css .token.string,
+        body.dark .style .token.string {
+            color: #60a5fa !important;
+        }
+        
+        body.dark .token.atrule,
+        body.dark .token.attr-value,
+        body.dark .token.keyword {
+            color: #a78bfa !important;
+        }
+        
+        body.dark .token.function,
+        body.dark .token.class-name {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .bg-blue-100 {
+            background-color: #1e3a5f !important;
+        }
+        
+        body.dark .bg-green-100 {
+            background-color: #064e3b !important;
+        }
+        
+        body.dark .bg-yellow-100 {
+            background-color: #78350f !important;
+        }
+        
+        body.dark .bg-red-100 {
+            background-color: #7f1d1d !important;
+        }
+        
+        body.dark .bg-indigo-100 {
+            background-color: #312e81 !important;
+        }
+        
+        body.dark .text-green-800 {
+            color: #34d399 !important;
+        }
+        
+        body.dark .text-yellow-800 {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .text-red-800 {
+            color: #f87171 !important;
+        }
+        
+        body.dark .text-indigo-800 {
+            color: #818cf8 !important;
+        }
+        
+        body.dark .text-blue-500 {
+            color: #60a5fa !important;
+        }
+        
+        body.dark .text-green-500 {
+            color: #34d399 !important;
+        }
+        
+        body.dark .text-yellow-500 {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .text-purple-500 {
+            color: #a78bfa !important;
+        }
+        
+        body.dark .text-orange-500 {
+            color: #fb923c !important;
+        }
+        
+        body.dark .text-cyan-500 {
+            color: #22d3ee !important;
+        }
+        
+        body.dark .text-indigo-500 {
+            color: #818cf8 !important;
+        }
+        
+        body.dark .fa-moon {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .fa-sun {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .fa-bars {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .fa-search {
+            color: #9ca3af !important;
+        }
+        
+        body.dark .fa-home,
+        body.dark .fa-code,
+        body.dark .fa-database,
+        body.dark .fa-sitemap,
+        body.dark .fa-cogs,
+        body.dark .fa-list,
+        body.dark .fa-cube,
+        body.dark .fa-file,
+        body.dark .fa-puzzle-piece,
+        body.dark .fa-project-diagram {
+            color: #60a5fa !important;
+        }
+        
+        body.dark .fa-check-circle {
+            color: #34d399 !important;
+        }
+        
+        body.dark .fa-briefcase {
+            color: #60a5fa !important;
+        }
+        
+        body.dark .fa-exclamation-triangle {
+            color: #fbbf24 !important;
+        }
+        
+        body.dark .fa-keyboard {
+            color: #a78bfa !important;
+        }
+        
+        body.dark .fa-tasks {
+            color: #a78bfa !important;
+        }
+        
+        body.dark .fa-question-circle {
+            color: #818cf8 !important;
+        }
+        
+        body.dark .fa-code-branch {
+            color: #fb923c !important;
+        }
+        
+        body.dark .fa-redo {
+            color: #22d3ee !important;
+        }
+        
+        body.dark .fa-check {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .fa-play {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .fa-arrow-left,
+        body.dark .fa-arrow-right {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark input {
+            background-color: #374151 !important;
+            color: #f3f4f6 !important;
+            border-color: #4b5563 !important;
+        }
+        
+        body.dark input::placeholder {
+            color: #9ca3af !important;
+        }
+        
+        body.dark textarea {
+            background-color: #1e293b !important;
+            color: #e2e8f0 !important;
+            border-color: #4b5563 !important;
+        }
+        
+        body.dark textarea::placeholder {
+            color: #9ca3af !important;
+        }
+        
+        body.dark button {
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .bg-gray-200 {
+            background-color: #374151 !important;
+        }
+        
+        body.dark .bg-gray-300 {
+            background-color: #4b5563 !important;
+        }
+        
+        body.dark .bg-gray-400 {
+            background-color: #6b7280 !important;
+        }
+        
+        body.dark code {
+            background-color: #374151 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        /* Light mode styles */
+        body:not(.dark) .bg-white {
+            background-color: #ffffff !important;
+        }
+        
+        body:not(.dark) .bg-gray-50 {
+            background-color: #f9fafb !important;
+        }
+        
+        body:not(.dark) .bg-gray-100 {
+            background-color: #f3f4f6 !important;
+        }
+        
+        body:not(.dark) .bg-gray-200 {
+            background-color: #e5e7eb !important;
+        }
+        
+        body:not(.dark) .bg-gray-300 {
+            background-color: #d1d5db !important;
+        }
+        
+        body:not(.dark) .bg-gray-700 {
+            background-color: #374151 !important;
+        }
+        
+        body:not(.dark) .bg-gray-800 {
+            background-color: #1f2937 !important;
+        }
+        
+        body:not(.dark) .bg-gray-900 {
+            background-color: #111827 !important;
+        }
+        
+        body:not(.dark) .bg-blue-50 {
+            background-color: #eff6ff !important;
+        }
+        
+        body:not(.dark) .bg-green-50 {
+            background-color: #f0fdf4 !important;
+        }
+        
+        body:not(.dark) .bg-yellow-50 {
+            background-color: #fffbeb !important;
+        }
+        
+        body:not(.dark) .bg-purple-50 {
+            background-color: #faf5ff !important;
+        }
+        
+        body:not(.dark) .bg-orange-50 {
+            background-color: #fff7ed !important;
+        }
+        
+        body:not(.dark) .bg-cyan-50 {
+            background-color: #ecfeff !important;
+        }
+        
+        body:not(.dark) .bg-indigo-50 {
+            background-color: #eef2ff !important;
+        }
+        
+        body:not(.dark) .text-gray-900 {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .text-gray-600 {
+            color: #4b5563 !important;
+        }
+        
+        body:not(.dark) .text-gray-400 {
+            color: #9ca3af !important;
+        }
+        
+        body:not(.dark) .text-green-600 {
+            color: #16a34a !important;
+        }
+        
+        body:not(.dark) .text-red-600 {
+            color: #dc2626 !important;
+        }
+        
+        body:not(.dark) .text-yellow-800 {
+            color: #92400e !important;
+        }
+        
+        body:not(.dark) .text-green-800 {
+            color: #166534 !important;
+        }
+        
+        body:not(.dark) .text-red-800 {
+            color: #991b1b !important;
+        }
+        
+        body:not(.dark) .border-gray-300 {
+            border-color: #d1d5db !important;
+        }
+        
+        body:not(.dark) .border-gray-600 {
+            border-color: #4b5563 !important;
+        }
+        
+        body:not(.dark) .hover\:bg-gray-100:hover {
+            background-color: #f3f4f6 !important;
+        }
+        
+        body:not(.dark) .hover\:bg-gray-700:hover {
+            background-color: #374151 !important;
+        }
+        
+        body:not(.dark) .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        body:not(.dark) .shadow-md {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        }
+        
+        body:not(.dark) .prose {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .prose h1, 
+        body:not(.dark) .prose h2, 
+        body:not(.dark) .prose h3 {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .prose p {
+            color: #1f2937 !important;
+        }
+        
+        body:not(.dark) .prose ul, 
+        body:not(.dark) .prose ol {
+            color: #1f2937 !important;
+        }
+        
+        body:not(.dark) .prose li {
+            color: #1f2937 !important;
+        }
+        
+        body:not(.dark) .prose strong {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .prose code {
+            color: #111827 !important;
+            background-color: #f3f4f6 !important;
+        }
+        
+        body:not(.dark) pre {
+            background-color: #f3f4f6 !important;
+            color: #111827 !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        body:not(.dark) pre[class*="language-"] {
+            background-color: #f3f4f6 !important;
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) code[class*="language-"] {
+            background-color: transparent !important;
+            color: #111827 !important;
+            text-shadow: none !important;
+        }
+        
+        body:not(.dark) .bg-blue-100 {
+            background-color: #dbeafe !important;
+        }
+        
+        body:not(.dark) .bg-green-100 {
+            background-color: #dcfce7 !important;
+        }
+        
+        body:not(.dark) .bg-yellow-100 {
+            background-color: #fef3c7 !important;
+        }
+        
+        body:not(.dark) .bg-red-100 {
+            background-color: #fee2e2 !important;
+        }
+        
+        body:not(.dark) .bg-indigo-100 {
+            background-color: #e0e7ff !important;
+        }
+        
+        body:not(.dark) .text-green-800 {
+            color: #166534 !important;
+        }
+        
+        body:not(.dark) .text-yellow-800 {
+            color: #92400e !important;
+        }
+        
+        body:not(.dark) .text-red-800 {
+            color: #991b1b !important;
+        }
+        
+        body:not(.dark) .text-indigo-800 {
+            color: #3730a3 !important;
+        }
+        
+        body:not(.dark) .text-blue-500 {
+            color: #3b82f6 !important;
+        }
+        
+        body:not(.dark) .text-green-500 {
+            color: #22c55e !important;
+        }
+        
+        body:not(.dark) .text-yellow-500 {
+            color: #eab308 !important;
+        }
+        
+        body:not(.dark) .text-purple-500 {
+            color: #a855f7 !important;
+        }
+        
+        body:not(.dark) .text-orange-500 {
+            color: #f97316 !important;
+        }
+        
+        body:not(.dark) .text-cyan-500 {
+            color: #06b6d4 !important;
+        }
+        
+        body:not(.dark) .text-indigo-500 {
+            color: #6366f1 !important;
+        }
+        
+        body:not(.dark) .fa-moon {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .fa-sun {
+            color: #f59e0b !important;
+        }
+        
+        body:not(.dark) .fa-bars {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .fa-search {
+            color: #6b7280 !important;
+        }
+        
+        body:not(.dark) .fa-home,
+        body:not(.dark) .fa-code,
+        body:not(.dark) .fa-database,
+        body:not(.dark) .fa-sitemap,
+        body:not(.dark) .fa-cogs,
+        body:not(.dark) .fa-list,
+        body:not(.dark) .fa-cube,
+        body:not(.dark) .fa-file,
+        body:not(.dark) .fa-puzzle-piece,
+        body:not(.dark) .fa-project-diagram {
+            color: #3b82f6 !important;
+        }
+        
+        body:not(.dark) .fa-check-circle {
+            color: #22c55e !important;
+        }
+        
+        body:not(.dark) .fa-briefcase {
+            color: #3b82f6 !important;
+        }
+        
+        body:not(.dark) .fa-exclamation-triangle {
+            color: #eab308 !important;
+        }
+        
+        body:not(.dark) .fa-keyboard {
+            color: #a855f7 !important;
+        }
+        
+        body:not(.dark) .fa-tasks {
+            color: #a855f7 !important;
+        }
+        
+        body:not(.dark) .fa-question-circle {
+            color: #6366f1 !important;
+        }
+        
+        body:not(.dark) .fa-code-branch {
+            color: #f97316 !important;
+        }
+        
+        body:not(.dark) .fa-redo {
+            color: #06b6d4 !important;
+        }
+        
+        body:not(.dark) .fa-check {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .fa-play {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .fa-arrow-left,
+        body:not(.dark) .fa-arrow-right {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) input {
+            background-color: #f3f4f6 !important;
+            color: #111827 !important;
+            border-color: #d1d5db !important;
+        }
+        
+        body:not(.dark) input::placeholder {
+            color: #6b7280 !important;
+        }
+        
+        body:not(.dark) textarea {
+            background-color: #f3f4f6 !important;
+            color: #111827 !important;
+            border-color: #d1d5db !important;
+        }
+        
+        body:not(.dark) textarea::placeholder {
+            color: #6b7280 !important;
+        }
+        
+        body:not(.dark) button {
+            color: #111827 !important;
+        }
+        
+        body:not(.dark) .bg-gray-200 {
+            background-color: #e5e7eb !important;
+        }
+        
+        body:not(.dark) .bg-gray-300 {
+            background-color: #d1d5db !important;
+        }
+        
+        body:not(.dark) .bg-gray-400 {
+            background-color: #9ca3af !important;
+        }
+        
+        body:not(.dark) code {
+            background-color: #f3f4f6 !important;
+            color: #111827 !important;
+        }
+        
+        /* Dark mode scrollbar */
+        body.dark ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        body.dark ::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+        }
+        
+        body.dark .code-editor {
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        /* Custom button styles for better visibility */
+        .btn-secondary {
+            background-color: #d1d5db !important;
+            color: #374151 !important;
+            font-weight: 500 !important;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #9ca3af !important;
+            color: #1f2937 !important;
+        }
+        
+        body.dark .btn-secondary {
+            background-color: #4b5563 !important;
+            color: #f3f4f6 !important;
+        }
+        
+        body.dark .btn-secondary:hover {
+            background-color: #6b7280 !important;
+            color: #f9fafb !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-40">
+        <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center">
+                <button id="menuToggle" class="lg:hidden mr-3 p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center">
+                    <i class="fab fa-python text-blue-500 text-3xl mr-3"></i>
+                    <h1 class="text-xl font-bold">Belajar Python</h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                <div class="hidden md:block relative">
+                    <input type="text" id="searchInput" placeholder="Cari pelajaran..." 
+                           class="pl-10 pr-4 py-2 rounded-lg bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-moon text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar fixed left-0 top-16 bottom-0 w-64 bg-white shadow-lg z-30 overflow-y-auto transform -translate-x-full lg:translate-x-0">
+        <div class="p-4">
+            <!-- Navigation Menu -->
+            <nav>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#pengenalan" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors active">
+                            <i class="fas fa-home w-5 mr-3"></i>
+                            <span>Pengenalan Python</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#sintaks-dasar" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-code w-5 mr-3"></i>
+                            <span>Sintaks Dasar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#tipe-data" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-database w-5 mr-3"></i>
+                            <span>Tipe Data</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#struktur-kontrol" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-sitemap w-5 mr-3"></i>
+                            <span>Struktur Kontrol</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#fungsi" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-cogs w-5 mr-3"></i>
+                            <span>Fungsi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#list-dictionary" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-list w-5 mr-3"></i>
+                            <span>List & Dictionary</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#oop" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-cube w-5 mr-3"></i>
+                            <span>OOP</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#file-handling" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-file w-5 mr-3"></i>
+                            <span>File Handling</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#modul-paket" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-puzzle-piece w-5 mr-3"></i>
+                            <span>Modul & Paket</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#project" class="nav-link flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-project-diagram w-5 mr-3"></i>
+                            <span>Project Akhir</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-64 mt-16 p-4 md:p-6">
+        <!-- Pengenalan Section -->
+        <section id="pengenalan" class="content-section">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-home mr-3 text-blue-500"></i>
+                        Pengenalan Python
+                    </h2>
+                    
+                    <div class="prose max-w-none">
+                        <p class="text-lg mb-4">
+                            Python adalah bahasa pemrograman tingkat tinggi yang diciptakan oleh Guido van Rossum. 
+                            Python dikenal dengan sintaksnya yang sederhana dan mudah dibaca, membuatnya menjadi 
+                            pilihan ideal untuk pemula.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div class="lesson-card bg-blue-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-2">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Keunggulan Python
+                                </h3>
+                                <ul class="list-disc list-inside space-y-1 text-sm">
+                                    <li>Mudah dipelajari dan digunakan</li>
+                                    <li>Sintaks yang bersih dan readable</li>
+                                    <li>Multi-paradigm programming</li>
+                                    <li>Library yang sangat lengkap</li>
+                                    <li>Community yang besar dan aktif</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="lesson-card bg-green-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-2">
+                                    <i class="fas fa-briefcase text-blue-500 mr-2"></i>
+                                    Penggunaan Python
+                                </h3>
+                                <ul class="list-disc list-inside space-y-1 text-sm">
+                                    <li>Web Development (Django, Flask)</li>
+                                    <li>Data Science & AI</li>
+                                    <li>Automation & Scripting</li>
+                                    <li>Game Development</li>
+                                    <li>Desktop Applications</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                            <h3 class="font-semibold mb-3">Program Python Pertama</h3>
+                            <pre><code class="language-python"># Hello World di Python
+print("Hello, World!")
+
+# Menampilkan nama
+nama = "Python Learner"
+print(f"Selamat datang, {nama}!")</code></pre>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <button class="btn-secondary px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i>Sebelumnya
+                            </button>
+                            <button onclick="navigateToSection('sintaks-dasar')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Selanjutnya<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sintaks Dasar Section -->
+        <section id="sintaks-dasar" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-code mr-3 text-blue-500"></i>
+                        Sintaks Dasar Python
+                    </h2>
+                    
+                    <div class="prose max-w-none">
+                        <p class="text-lg mb-4">
+                            Python memiliki sintaks yang bersih dan mudah dibaca. Indentasi adalah bagian penting 
+                            dari sintaks Python untuk mendefinisikan blok kode.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">
+                                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                                    Aturan Indentasi
+                                </h3>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Gunakan 4 spasi untuk setiap level indentasi</li>
+                                    <li>Jangan campur spasi dan tab</li>
+                                    <li>Indentasi yang salah akan menyebabkan error</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">Contoh Sintaks Dasar</h3>
+                                <pre><code class="language-python"># Variabel dan tipe data
+nama = "John"          # String
+umur = 25              # Integer
+tinggi = 175.5         # Float
+is_student = True      # Boolean
+
+# Print dengan format
+print(f"Nama: {nama}")
+print(f"Umur: {umur} tahun")
+print(f"Tinggi: {tinggi} cm")
+print(f"Status: {'Mahasiswa' if is_student else 'Bukan Mahasiswa'}")
+
+# Komentar multi-line
+"""
+Ini adalah komentar
+yang berjalan di beberapa baris
+"""</code></pre>
+                            </div>
+                            
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">
+                                    <i class="fas fa-keyboard text-purple-500 mr-2"></i>
+                                    Input dari User
+                                </h3>
+                                <pre><code class="language-python"># Menerima input dari user
+nama = input("Masukkan nama Anda: ")
+umur = int(input("Masukkan umur Anda: "))
+
+print(f"Halo {nama}, umur Anda {umur} tahun.")</code></pre>
+                            </div>
+                            
+                            <!-- Interactive Code Editor -->
+                            <div class="bg-white border-2 border-gray-300 rounded-lg p-4">
+                                <h3 class="font-semibold mb-3">Coba Sendiri!</h3>
+                                <div class="mb-3">
+                                    <textarea id="codeEditor1" class="code-editor w-full p-3 rounded" rows="6" placeholder="Tulis kode Python Anda di sini..."># Coba tulis kode Python Anda
+nama = "Python"
+versi = 3.10
+print(f"Saya belajar Python versi {versi}")</textarea>
+                                </div>
+                                <button onclick="runCode('codeEditor1', 'output1')" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                                    <i class="fas fa-play mr-2"></i>Jalankan Kode
+                                </button>
+                                <div id="output1" class="mt-3 p-3 bg-gray-100 rounded-lg font-mono text-sm min-h-[40px]"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <button onclick="navigateToSection('pengenalan')" class="btn-secondary px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i>Sebelumnya
+                            </button>
+                            <button onclick="navigateToSection('tipe-data')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Selanjutnya<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tipe Data Section -->
+        <section id="tipe-data" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-database mr-3 text-blue-500"></i>
+                        Tipe Data di Python
+                    </h2>
+                    
+                    <div class="prose max-w-none">
+                        <p class="text-lg mb-4">
+                            Python memiliki beberapa tipe data built-in yang penting untuk diketahui. 
+                            Setiap tipe data memiliki karakteristik dan penggunaan yang berbeda.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <div class="lesson-card bg-blue-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-2">Tipe Data Numerik</h3>
+                                <ul class="space-y-2 text-sm">
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">int</code> - Bilangan bulat</li>
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">float</code> - Bilangan desimal</li>
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">complex</code> - Bilangan kompleks</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="lesson-card bg-green-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-2">Tipe Data Sequence</h3>
+                                <ul class="space-y-2 text-sm">
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">str</code> - String</li>
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">list</code> - List</li>
+                                    <li><code class="bg-gray-200 px-2 py-1 rounded">tuple</code> - Tuple</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                            <h3 class="font-semibold mb-3">Contoh Penggunaan Tipe Data</h3>
+                            <pre><code class="language-python"># Tipe Data Numerik
+x = 10          # int
+y = 3.14        # float
+z = 2 + 3j      # complex
+
+print(type(x))  # <class 'int'>
+print(type(y))  # <class 'float'>
+print(type(z))  # <class 'complex'>
+
+# Tipe Data String
+nama = "Python"
+kalimat = 'Saya belajar Python'
+multiline = """Ini adalah
+string multi-line"""
+
+print(nama.upper())      # PYTHON
+print(nama.lower())      # python
+print(len(kalimat))     # 17
+
+# Type Conversion
+num_str = "123"
+num_int = int(num_str)
+print(num_int + 10)      # 133</code></pre>
+                        </div>
+                        
+                        <!-- Interactive Exercise -->
+                        <div class="bg-purple-50 p-4 rounded-lg mb-6">
+                            <h3 class="font-semibold mb-3">
+                                <i class="fas fa-tasks text-purple-500 mr-2"></i>
+                                Latihan: Tipe Data
+                            </h3>
+                            <p class="mb-3">Coba selesaikan latihan berikut:</p>
+                            <ol class="list-decimal list-inside space-y-2 mb-4">
+                                <li>Buat variabel <code>umur</code> dengan nilai 20</li>
+                                <li>Buat variabel <code>nama</code> dengan nama Anda</li>
+                                <li>Ubah <code>umur</code> menjadi string dan gabungkan dengan <code>nama</code></li>
+                                <li>Hitung panjang dari string hasil gabungan</li>
+                            </ol>
+                            
+                            <div class="bg-white border-2 border-gray-300 rounded-lg p-4">
+                                <textarea id="exerciseEditor" class="code-editor w-full p-3 rounded" rows="8" placeholder="Tulis jawaban Anda di sini..."># Tulis kode Anda di sini
+# 1. Buat variabel umur
+
+# 2. Buat variabel nama
+
+# 3. Ubah umur menjadi string dan gabungkan
+
+# 4. Hitung panjang string
+
+</textarea>
+                                <button onclick="checkExercise()" class="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors">
+                                    <i class="fas fa-check mr-2"></i>Cek Jawaban
+                                </button>
+                                <div id="exerciseFeedback" class="mt-3 p-3 rounded-lg hidden"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <button onclick="navigateToSection('sintaks-dasar')" class="btn-secondary px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i>Sebelumnya
+                            </button>
+                            <button onclick="navigateToSection('struktur-kontrol')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Selanjutnya<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Struktur Kontrol Section -->
+        <section id="struktur-kontrol" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-sitemap mr-3 text-blue-500"></i>
+                        Struktur Kontrol
+                    </h2>
+                    
+                    <div class="prose max-w-none">
+                        <p class="text-lg mb-4">
+                            Struktur kontrol memungkinkan program untuk membuat keputusan dan mengulang 
+                            eksekusi kode berdasarkan kondisi tertentu.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="bg-orange-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">
+                                    <i class="fas fa-code-branch text-orange-500 mr-2"></i>
+                                    Conditional Statements (If-Else)
+                                </h3>
+                                <pre><code class="language-python"># If statement sederhana
+umur = 18
+
+if umur >= 18:
+    print("Anda sudah dewasa")
+    
+# If-Else
+nilai = 75
+if nilai >= 80:
+    print("Nilai A")
+elif nilai >= 70:
+    print("Nilai B")
+elif nilai >= 60:
+    print("Nilai C")
+else:
+    print("Nilai D")
+
+# Nested If
+x = 10
+y = 20
+if x > 5:
+    if y > 15:
+        print("Kedua kondisi terpenuhi")</code></pre>
+                            </div>
+                            
+                            <div class="bg-cyan-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">
+                                    <i class="fas fa-redo text-cyan-500 mr-2"></i>
+                                    Loops (Perulangan)
+                                </h3>
+                                <pre><code class="language-python"># For loop
+print("For loop:")
+for i in range(5):
+    print(f"Iterasi {i}")
+
+# For loop dengan list
+buah = ["apel", "jeruk", "mangga"]
+for item in buah:
+    print(f"Saya suka {item}")
+
+# While loop
+print("\nWhile loop:")
+count = 0
+while count < 3:
+    print(f"Count: {count}")
+    count += 1
+
+# Loop dengan break dan continue
+print("\nLoop dengan break:")
+for i in range(10):
+    if i == 5:
+        break
+    print(i)
+
+print("\nLoop dengan continue:")
+for i in range(10):
+    if i % 2 == 0:
+        continue
+    print(i)</code></pre>
+                            </div>
+                            
+                            <!-- Interactive Quiz -->
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <h3 class="font-semibold mb-3">
+                                    <i class="fas fa-question-circle text-indigo-500 mr-2"></i>
+                                    Quiz Cepat
+                                </h3>
+                                <div id="quizContainer">
+                                    <p class="mb-3">Apa output dari kode berikut?</p>
+                                    <pre><code class="language-python">x = 5
+if x > 3:
+    print("Lebih besar")
+else:
+    print("Lebih kecil")</code></pre>
+                                    <div class="space-y-2 mt-3">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="quiz" value="a" class="mr-2">
+                                            <span>Lebih kecil</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="quiz" value="b" class="mr-2">
+                                            <span>Lebih besar</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="quiz" value="c" class="mr-2">
+                                            <span>Error</span>
+                                        </label>
+                                    </div>
+                                    <button onclick="checkQuiz()" class="mt-3 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors">
+                                        <i class="fas fa-check mr-2"></i>Cek Jawaban
+                                    </button>
+                                    <div id="quizFeedback" class="mt-3 p-3 rounded-lg hidden"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <button onclick="navigateToSection('tipe-data')" class="btn-secondary px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i>Sebelumnya
+                            </button>
+                            <button onclick="navigateToSection('fungsi')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Selanjutnya<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Placeholder sections for other topics -->
+        <section id="fungsi" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-cogs mr-3 text-blue-500"></i>
+                        Fungsi di Python
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk fungsi akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="list-dictionary" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-list mr-3 text-blue-500"></i>
+                        List & Dictionary
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk list dan dictionary akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="oop" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-cube mr-3 text-blue-500"></i>
+                        Object Oriented Programming
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk OOP akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="file-handling" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-file mr-3 text-blue-500"></i>
+                        File Handling
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk file handling akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul-paket" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-puzzle-piece mr-3 text-blue-500"></i>
+                        Modul & Paket
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk modul dan paket akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="project" class="content-section hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-project-diagram mr-3 text-blue-500"></i>
+                        Project Akhir
+                    </h2>
+                    <p class="text-lg mb-4">Konten untuk project akhir akan segera tersedia...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden lg:hidden"></div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const moonIcon = themeToggle.querySelector('.fa-moon');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark');
+            moonIcon.classList.remove('fa-moon');
+            moonIcon.classList.add('fa-sun', 'text-yellow-400');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const currentTheme = body.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+            
+            // Toggle icon
+            if (currentTheme === 'dark') {
+                moonIcon.classList.remove('fa-moon');
+                moonIcon.classList.add('fa-sun', 'text-yellow-400');
+            } else {
+                moonIcon.classList.remove('fa-sun', 'text-yellow-400');
+                moonIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // Sidebar Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            mobileOverlay.classList.toggle('hidden');
+        });
+        
+        mobileOverlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            mobileOverlay.classList.add('hidden');
+        });
+        
+        // Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                navigateToSection(targetId);
+                
+                // Close mobile menu
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                    mobileOverlay.classList.add('hidden');
+                }
+            });
+        });
+        
+        function navigateToSection(sectionId) {
+            // Hide all sections
+            contentSections.forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                // Update active nav link
+                navLinks.forEach(link => {
+                    link.classList.remove('active', 'bg-blue-100');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active', 'bg-blue-100');
+                    }
+                });
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.content-section');
+            
+            sections.forEach(section => {
+                const title = section.querySelector('h2').textContent.toLowerCase();
+                const content = section.textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    if (searchTerm !== '') {
+                        section.classList.remove('hidden');
+                        // Highlight search term
+                        highlightSearchTerm(section, searchTerm);
+                    }
+                } else {
+                    if (searchTerm !== '') {
+                        section.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        function highlightSearchTerm(element, term) {
+            // Simple highlight implementation
+            const text = element.textContent;
+            const regex = new RegExp(`(${term})`, 'gi');
+            // This is a simplified version - in production, you'd want more sophisticated highlighting
+        }
+        
+        // Code Runner
+        function runCode(editorId, outputId) {
+            const code = document.getElementById(editorId).value;
+            const output = document.getElementById(outputId);
+            
+            // Clear previous output
+            output.textContent = '';
+            output.className = 'mt-3 p-3 bg-gray-100 rounded-lg font-mono text-sm min-h-[40px]';
+            
+            // Apply dark mode styles to output if needed
+            if (body.classList.contains('dark')) {
+                output.classList.add('dark:bg-gray-800', 'dark:text-gray-200');
+            }
+            
+            // Capture console.log output
+            const originalLog = console.log;
+            const logs = [];
+            console.log = function(...args) {
+                logs.push(args.join(' '));
+                originalLog.apply(console, args);
+            };
+            
+            try {
+                // Execute the code
+                eval(code);
+                
+                // Display output
+                if (logs.length > 0) {
+                    output.textContent = logs.join('\n');
+                    output.classList.add('text-green-600');
+                    if (body.classList.contains('dark')) {
+                        output.classList.remove('text-green-600');
+                        output.classList.add('text-green-400');
+                    }
+                } else {
+                    output.textContent = 'Kode berhasil dijalankan (tidak ada output)';
+                    output.classList.add('text-gray-600');
+                    if (body.classList.contains('dark')) {
+                        output.classList.remove('text-gray-600');
+                        output.classList.add('text-gray-400');
+                    }
+                }
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+                output.classList.add('text-red-600');
+                if (body.classList.contains('dark')) {
+                    output.classList.remove('text-red-600');
+                    output.classList.add('text-red-400');
+                }
+            }
+            
+            // Restore original console.log
+            console.log = originalLog;
+        }
+        
+        // Exercise Checker
+        function checkExercise() {
+            const code = document.getElementById('exerciseEditor').value;
+            const feedback = document.getElementById('exerciseFeedback');
+            
+            try {
+                // Create a safe environment to run the code
+                const result = eval(`
+                    (function() {
+                        ${code}
+                        return {
+                            umur: typeof umur !== 'undefined' ? umur : null,
+                            nama: typeof nama !== 'undefined' ? nama : null,
+                            gabungan: typeof gabungan !== 'undefined' ? gabungan : null,
+                            panjang: typeof panjang !== 'undefined' ? panjang : null
+                        };
+                    })()
+                `);
+                
+                // Check the results
+                let score = 0;
+                let messages = [];
+                
+                if (result.umur === 20) {
+                    score += 25;
+                    messages.push('✓ Variabel umur benar');
+                } else {
+                    messages.push('✗ Variabel umur salah');
+                }
+                
+                if (result.nama && typeof result.nama === 'string') {
+                    score += 25;
+                    messages.push('✓ Variabel nama benar');
+                } else {
+                    messages.push('✗ Variabel nama salah');
+                }
+                
+                if (result.gabungan && typeof result.gabungan === 'string') {
+                    score += 25;
+                    messages.push('✓ Penggabungan benar');
+                } else {
+                    messages.push('✗ Penggabungan salah');
+                }
+                
+                if (result.panjang && typeof result.panjang === 'number') {
+                    score += 25;
+                    messages.push('✓ Perhitungan panjang benar');
+                } else {
+                    messages.push('✗ Perhitungan panjang salah');
+                }
+                
+                // Show feedback
+                feedback.classList.remove('hidden');
+                if (score === 100) {
+                    feedback.className = 'mt-3 p-3 bg-green-100 text-green-800 rounded-lg';
+                    if (body.classList.contains('dark')) {
+                        feedback.classList.remove('bg-green-100', 'text-green-800');
+                        feedback.classList.add('bg-green-900/30', 'text-green-200');
+                    }
+                    feedback.innerHTML = `<strong>Sempurna! 🎉</strong><br>${messages.join('<br>')}`;
+                } else {
+                    feedback.className = 'mt-3 p-3 bg-yellow-100 text-yellow-800 rounded-lg';
+                    if (body.classList.contains('dark')) {
+                        feedback.classList.remove('bg-yellow-100', 'text-yellow-800');
+                        feedback.classList.add('bg-yellow-900/30', 'text-yellow-200');
+                    }
+                    feedback.innerHTML = `<strong>Score: ${score}%</strong><br>${messages.join('<br>')}`;
+                }
+            } catch (error) {
+                feedback.classList.remove('hidden');
+                feedback.className = 'mt-3 p-3 bg-red-100 text-red-800 rounded-lg';
+                if (body.classList.contains('dark')) {
+                    feedback.classList.remove('bg-red-100', 'text-red-800');
+                    feedback.classList.add('bg-red-900/30', 'text-red-200');
+                }
+                feedback.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Quiz Checker
+        function checkQuiz() {
+            const selected = document.querySelector('input[name="quiz"]:checked');
+            const feedback = document.getElementById('quizFeedback');
+            
+            if (!selected) {
+                feedback.classList.remove('hidden');
+                feedback.className = 'mt-3 p-3 bg-yellow-100 text-yellow-800 rounded-lg';
+                if (body.classList.contains('dark')) {
+                    feedback.classList.remove('bg-yellow-100', 'text-yellow-800');
+                    feedback.classList.add('bg-yellow-900/30', 'text-yellow-200');
+                }
+                feedback.textContent = 'Silakan pilih jawaban terlebih dahulu';
+                return;
+            }
+            
+            feedback.classList.remove('hidden');
+            if (selected.value === 'b') {
+                feedback.className = 'mt-3 p-3 bg-green-100 text-green-800 rounded-lg';
+                if (body.classList.contains('dark')) {
+                    feedback.classList.remove('bg-green-100', 'text-green-800');
+                    feedback.classList.add('bg-green-900/30', 'text-green-200');
+                }
+                feedback.innerHTML = '<strong>Benar! 🎉</strong><br>Karena x = 5 lebih besar dari 3, maka kode akan mencetak "Lebih besar".';
+            } else {
+                feedback.className = 'mt-3 p-3 bg-red-100 text-red-800 rounded-lg';
+                if (body.classList.contains('dark')) {
+                    feedback.classList.remove('bg-red-100', 'text-red-800');
+                    feedback.classList.add('bg-red-900/30', 'text-red-200');
+                }
+                feedback.innerHTML = '<strong>Salah 😞</strong><br>Coba periksa kembali kondisi if-else nya.';
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial active nav
+            navLinks[0].classList.add('active', 'bg-blue-100');
+            
+            // Initialize Prism for syntax highlighting
+            Prism.highlightAll();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+    </script>
+</body>
+</html>
