@@ -26,6 +26,6 @@ Struktur website:
 
 ## ✅ Verifikasi
 Website ini terhubung ke **Google Search Console** dengan file: google8cfb0028792c5fba.html
-'''
+```
 google-site-verification: google8cfb0028792c5fba.html
-'''
+```
