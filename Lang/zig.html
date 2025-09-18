@@ -60,10 +60,13 @@
             border-radius: 8px;
             overflow: hidden;
             background: #1e1e1e;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .dark .code-wrapper {
             background: #0d1117;
+            border-color: rgba(255, 255, 255, 0.1);
         }
         
         .code-header {
@@ -115,6 +118,7 @@
             position: relative;
             max-height: 400px;
             overflow: auto;
+            background: transparent;
         }
         
         .code-content.expanded {
@@ -131,6 +135,9 @@
             tab-size: 4 !important;
             -moz-tab-size: 4 !important;
             -o-tab-size: 4 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
         }
         
         .code-content code {
@@ -143,26 +150,28 @@
             word-break: normal !important;
             word-wrap: normal !important;
             hyphens: none !important;
+            background: transparent !important;
+            color: #e1e4e8 !important;
         }
         
-        /* Custom scrollbar for code content */
+        /* Custom scrollbar for code content - No shadow */
         .code-content::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         
         .code-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
         
         .code-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 4px;
         }
         
         .code-content::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.3);
         }
         
         /* Expand indicator */
@@ -172,16 +181,18 @@
             left: 0;
             right: 0;
             height: 40px;
-            background: linear-gradient(to top, rgba(30, 30, 30, 0.9), transparent);
+            background: linear-gradient(to top, rgba(30, 30, 30, 0.95), transparent);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: opacity 0.3s ease;
+            border: none;
+            outline: none;
         }
         
         .dark .expand-indicator {
-            background: linear-gradient(to top, rgba(13, 17, 23, 0.9), transparent);
+            background: linear-gradient(to top, rgba(13, 17, 23, 0.95), transparent);
         }
         
         .expand-indicator.hidden {
@@ -195,6 +206,9 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
         
         /* Sidebar animation */
@@ -252,6 +266,7 @@
             overflow-y: auto;
             position: relative;
             z-index: 1;
+            min-width: 0; /* Prevents flex item from overflowing */
         }
         
         /* Mobile sidebar */
@@ -364,12 +379,15 @@
         
         /* Ensure code blocks don't break layout */
         .bg-white, .dark .bg-gray-800 {
-            overflow: visible;
+            overflow: hidden;
+            word-wrap: break-word;
         }
         
         .bg-white .code-wrapper,
         .dark .bg-gray-800 .code-wrapper {
             max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         /* Line numbers for better readability */
@@ -384,6 +402,55 @@
         
         .very-long-code .code-content {
             max-height: 300px;
+        }
+        
+        /* Fix for content overflow */
+        section {
+            overflow: hidden;
+        }
+        
+        .max-w-4xl {
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .max-w-4xl {
+                max-width: 56rem;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+        
+        /* Remove any unwanted shadows from code */
+        pre[class*="language-"] {
+            box-shadow: none !important;
+            background: transparent !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+        }
+        
+        code[class*="language-"] {
+            box-shadow: none !important;
+            background: transparent !important;
+            color: inherit !important;
+        }
+        
+        /* Fix for code block positioning */
+        .p-4, .p-6, .p-8 {
+            box-sizing: border-box;
+        }
+        
+        /* Ensure proper containment */
+        .bg-white, .dark .bg-gray-800 {
+            box-sizing: border-box;
+            overflow: visible;
+        }
+        
+        .bg-white > *, .dark .bg-gray-800 > * {
+            max-width: 100%;
+            box-sizing: border-box;
         }
     </style>
     <!-- Add Fira Code font for better code display -->
