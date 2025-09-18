@@ -97,21 +97,57 @@
             }
         }
         
-        /* Fixed sidebar height */
-        .sidebar-container {
-            position: sticky;
-            top: 4rem;
-            height: calc(100vh - 4rem);
+        /* Layout fixes */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 4rem);
+        }
+        
+        .content-wrapper {
+            flex: 1;
             overflow-y: auto;
         }
         
+        /* Sidebar styling */
+        .sidebar-wrapper {
+            width: 16rem;
+            flex-shrink: 0;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow-y: auto;
+            position: sticky;
+            top: 4rem;
+            height: calc(100vh - 4rem);
+        }
+        
+        .dark .sidebar-wrapper {
+            background: #1f2937;
+        }
+        
+        /* Mobile sidebar */
         @media (max-width: 1023px) {
-            .sidebar-container {
+            .sidebar-wrapper {
                 position: fixed;
-                top: 4rem;
                 left: 0;
+                top: 4rem;
                 height: calc(100vh - 4rem);
                 z-index: 30;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar-wrapper.open {
+                transform: translateX(0);
+            }
+            
+            .content-wrapper {
+                margin-left: 0;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .content-wrapper {
+                margin-left: 16rem;
             }
         }
     </style>
@@ -138,110 +174,109 @@
                 </button>
                 <button class="hidden md:flex items-center space-x-2 bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
                     <i class="fas fa-download"></i>
-                    <a href="https://ziglang.org/download/"><span>Download Zig</span></a>
+                    <span>Download Zig</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="flex">
+    <!-- Main Container -->
+    <div class="main-container">
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
-            <div class="sidebar-container">
-                <nav class="p-4">
-                    <div class="mb-6">
-                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Mulai Belajar</h2>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="#intro" class="sidebar-item active block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-home mr-3"></i>Pengenalan Zig
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#install" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-cog mr-3"></i>Instalasi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#hello" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-code mr-3"></i>Hello World
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+        <aside id="sidebar" class="sidebar-wrapper">
+            <nav class="p-4">
+                <div class="mb-6">
+                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Mulai Belajar</h2>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#intro" class="sidebar-item active block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-home mr-3"></i>Pengenalan Zig
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#install" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-cog mr-3"></i>Instalasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#hello" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-code mr-3"></i>Hello World
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="mb-6">
-                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Dasar-dasar</h2>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="#variables" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-variable mr-3"></i>Variabel
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#types" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-database mr-3"></i>Tipe Data
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#functions" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-function mr-3"></i>Fungsi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#control" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-code-branch mr-3"></i>Kontrol Alur
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="mb-6">
+                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Dasar-dasar</h2>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#variables" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-variable mr-3"></i>Variabel
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#types" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-database mr-3"></i>Tipe Data
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#functions" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-function mr-3"></i>Fungsi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#control" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-code-branch mr-3"></i>Kontrol Alur
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="mb-6">
-                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Lanjutan</h2>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="#structs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-cube mr-3"></i>Structs
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#memory" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-memory mr-3"></i>Manajemen Memori
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#concurrency" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-tasks mr-3"></i>Konkurensi
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="mb-6">
+                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Lanjutan</h2>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#structs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-cube mr-3"></i>Structs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#memory" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-memory mr-3"></i>Manajemen Memori
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#concurrency" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-tasks mr-3"></i>Konkurensi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="mb-6">
-                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Referensi</h2>
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="#docs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-book mr-3"></i>Dokumentasi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#examples" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                    <i class="fas fa-laptop-code mr-3"></i>Contoh Kode
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
+                <div class="mb-6">
+                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Referensi</h2>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#docs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-book mr-3"></i>Dokumentasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#examples" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                <i class="fas fa-laptop-code mr-3"></i>Contoh Kode
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </aside>
 
         <!-- Overlay for mobile -->
         <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden hidden"></div>
 
         <!-- Main Content -->
-        <main class="flex-1 p-4 lg:p-8 lg:ml-0">
-            <div class="max-w-4xl mx-auto">
+        <main class="content-wrapper">
+            <div class="max-w-4xl mx-auto p-4 lg:p-8">
                 <!-- Pengenalan Section -->
                 <section id="intro" class="mb-12">
                     <h2 class="text-3xl font-bold mb-6 flex items-center">
@@ -1299,7 +1334,7 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 shadow-lg mt-12">
+    <footer class="bg-white dark:bg-gray-800 shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-8">
             <div class="grid md:grid-cols-3 gap-8">
                 <div>
@@ -1321,14 +1356,14 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
                     <p class="text-gray-600 dark:text-gray-400 mb-4">
                         Ingin membantu meningkatkan konten ini?
                     </p>
-                    <a href="https://github.com/Gh0sT4n/Gh0sT4n-Web" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                    <a href="#" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
                         <i class="fab fa-github mr-2"></i>
                         Contribute on GitHub
                     </a>
                 </div>
             </div>
             <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-600 dark:text-gray-400">
-                <p>&copy; 2025 Zig Language Indonesia. Made with <i class="fas fa-heart text-red-500"></i> for Zig community.</p>
+                <p>&copy; 2024 Zig Language Indonesia. Made with <i class="fas fa-heart text-red-500"></i> for Zig community.</p>
             </div>
         </div>
     </footer>
@@ -1357,12 +1392,12 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
         const overlay = document.getElementById('overlay');
         
         mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('open');
             overlay.classList.toggle('hidden');
         });
         
         overlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('open');
             overlay.classList.add('hidden');
         });
         
@@ -1405,7 +1440,7 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
                     
                     // Close mobile menu if open
                     if (window.innerWidth < 1024) {
-                        sidebar.classList.add('-translate-x-full');
+                        sidebar.classList.remove('open');
                         overlay.classList.add('hidden');
                     }
                 }
@@ -1438,7 +1473,7 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
         // Responsive handling
         function handleResize() {
             if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.remove('open');
                 overlay.classList.add('hidden');
             }
         }
