@@ -84,244 +84,388 @@
             transform: translateX(0);
         }
         
-        /* Mobile menu animation */
-        .mobile-menu-enter {
-            animation: slideIn 0.3s ease-out;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-        
         /* Layout fixes */
-        .main-container {
+        .app-container {
             display: flex;
-            min-height: calc(100vh - 4rem);
+            flex-direction: column;
+            min-height: 100vh;
         }
         
-        .content-wrapper {
+        .main-content {
+            display: flex;
             flex: 1;
-            overflow-y: auto;
+            position: relative;
         }
         
-        /* Sidebar styling */
-        .sidebar-wrapper {
+        /* Desktop sidebar */
+        .desktop-sidebar {
             width: 16rem;
             flex-shrink: 0;
             background: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
-            position: sticky;
-            top: 4rem;
-            height: calc(100vh - 4rem);
+            position: relative;
+            z-index: 10;
         }
         
-        .dark .sidebar-wrapper {
+        .dark .desktop-sidebar {
             background: #1f2937;
         }
         
+        /* Content area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
+        
         /* Mobile sidebar */
-        @media (max-width: 1023px) {
-            .sidebar-wrapper {
-                position: fixed;
-                left: 0;
-                top: 4rem;
-                height: calc(100vh - 4rem);
-                z-index: 30;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 16rem;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 50;
+            overflow-y: auto;
+        }
+        
+        .dark .mobile-sidebar {
+            background: #1f2937;
+        }
+        
+        .mobile-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        /* Backdrop overlay */
+        .backdrop-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .backdrop-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Responsive breakpoints */
+        @media (min-width: 1024px) {
+            .desktop-sidebar {
+                display: block;
             }
             
-            .sidebar-wrapper.open {
-                transform: translateX(0);
+            .mobile-sidebar {
+                display: none;
             }
             
-            .content-wrapper {
+            .content-area {
                 margin-left: 0;
             }
         }
         
-        @media (min-width: 1024px) {
-            .content-wrapper {
-                margin-left: 16rem;
+        @media (max-width: 1023px) {
+            .desktop-sidebar {
+                display: none;
             }
+            
+            .mobile-sidebar {
+                display: block;
+            }
+            
+            .content-area {
+                margin-left: 0;
+            }
+        }
+        
+        /* Header adjustments */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+        
+        /* Mobile sidebar header offset */
+        .mobile-sidebar {
+            top: 4rem;
+            height: calc(100vh - 4rem);
         }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
-        <div class="flex items-center justify-between px-4 py-3">
-            <div class="flex items-center space-x-4">
-                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-zig-orange rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">Z</span>
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header bg-white dark:bg-gray-800 shadow-md">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center space-x-4">
+                    <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-zig-orange rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">Z</span>
+                        </div>
+                        <h1 class="text-xl font-bold">Zig Language Indonesia</h1>
                     </div>
-                    <h1 class="text-xl font-bold">Zig Language Indonesia</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-sun text-xl dark:hidden"></i>
+                        <i class="fas fa-moon text-xl hidden dark:block"></i>
+                    </button>
+                    <button class="hidden md:flex items-center space-x-2 bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                        <i class="fas fa-download"></i>
+                        <span>Download Zig</span>
+                    </button>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-sun text-xl dark:hidden"></i>
-                    <i class="fas fa-moon text-xl hidden dark:block"></i>
-                </button>
-                <button class="hidden md:flex items-center space-x-2 bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
-                    <i class="fas fa-download"></i>
-                    <span>Download Zig</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar-wrapper">
-            <nav class="p-4">
-                <div class="mb-6">
-                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Mulai Belajar</h2>
-                    <ul class="space-y-1">
-                        <li>
-                            <a href="#intro" class="sidebar-item active block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-home mr-3"></i>Pengenalan Zig
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#install" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-cog mr-3"></i>Instalasi
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#hello" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-code mr-3"></i>Hello World
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="mb-6">
-                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Dasar-dasar</h2>
-                    <ul class="space-y-1">
-                        <li>
-                            <a href="#variables" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-variable mr-3"></i>Variabel
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#types" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-database mr-3"></i>Tipe Data
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#functions" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-function mr-3"></i>Fungsi
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#control" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-code-branch mr-3"></i>Kontrol Alur
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="mb-6">
-                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Lanjutan</h2>
-                    <ul class="space-y-1">
-                        <li>
-                            <a href="#structs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-cube mr-3"></i>Structs
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#memory" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-memory mr-3"></i>Manajemen Memori
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#concurrency" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-tasks mr-3"></i>Konkurensi
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="mb-6">
-                    <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Referensi</h2>
-                    <ul class="space-y-1">
-                        <li>
-                            <a href="#docs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-book mr-3"></i>Dokumentasi
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#examples" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
-                                <i class="fas fa-laptop-code mr-3"></i>Contoh Kode
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Overlay for mobile -->
-        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden hidden"></div>
+        </header>
 
         <!-- Main Content -->
-        <main class="content-wrapper">
-            <div class="max-w-4xl mx-auto p-4 lg:p-8">
-                <!-- Pengenalan Section -->
-                <section id="intro" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-home mr-3 text-zig-orange"></i>
-                        Pengenalan Zig Language
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-                        <p class="text-lg mb-4">
-                            Zig adalah bahasa pemrograman tujuan umum yang dirancang untuk <strong>robustness, optimalitas, dan maintainability</strong>. 
-                            Zig menawarkan alternatif yang lebih sederhana dan aman dibandingkan C sambil mempertahankan performa yang tinggi.
-                        </p>
-                        <div class="grid md:grid-cols-3 gap-4 mt-6">
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <i class="fas fa-bolt text-2xl text-zig-orange mb-2"></i>
-                                <h3 class="font-semibold mb-2">Performa Tinggi</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">Kompilasi langsung ke machine code tanpa overhead</p>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <i class="fas fa-shield-alt text-2xl text-zig-orange mb-2"></i>
-                                <h3 class="font-semibold mb-2">Memory Safety</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">Fitur built-in untuk mencegah memory leaks</p>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <i class="fas fa-code text-2xl text-zig-orange mb-2"></i>
-                                <h3 class="font-semibold mb-2">Sederhana</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">Sintaks yang bersih dan mudah dipahami</p>
+        <div class="main-content">
+            <!-- Desktop Sidebar -->
+            <aside class="desktop-sidebar">
+                <nav class="p-4 pt-6">
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Mulai Belajar</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#intro" class="sidebar-item active block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-home mr-3"></i>Pengenalan Zig
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#install" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-cog mr-3"></i>Instalasi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#hello" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-code mr-3"></i>Hello World
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Dasar-dasar</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#variables" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-variable mr-3"></i>Variabel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#types" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-database mr-3"></i>Tipe Data
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#functions" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-function mr-3"></i>Fungsi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#control" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-code-branch mr-3"></i>Kontrol Alur
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Lanjutan</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#structs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-cube mr-3"></i>Structs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#memory" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-memory mr-3"></i>Manajemen Memori
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#concurrency" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-tasks mr-3"></i>Konkurensi
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Referensi</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#docs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-book mr-3"></i>Dokumentasi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#examples" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-laptop-code mr-3"></i>Contoh Kode
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Mobile Sidebar -->
+            <aside id="mobileSidebar" class="mobile-sidebar">
+                <nav class="p-4">
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Mulai Belajar</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#intro" class="sidebar-item active block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-home mr-3"></i>Pengenalan Zig
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#install" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-cog mr-3"></i>Instalasi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#hello" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-code mr-3"></i>Hello World
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Dasar-dasar</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#variables" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-variable mr-3"></i>Variabel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#types" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-database mr-3"></i>Tipe Data
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#functions" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-function mr-3"></i>Fungsi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#control" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-code-branch mr-3"></i>Kontrol Alur
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Lanjutan</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#structs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-cube mr-3"></i>Structs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#memory" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-memory mr-3"></i>Manajemen Memori
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#concurrency" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-tasks mr-3"></i>Konkurensi
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Referensi</h2>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#docs" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-book mr-3"></i>Dokumentasi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#examples" class="sidebar-item block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">
+                                    <i class="fas fa-laptop-code mr-3"></i>Contoh Kode
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Backdrop Overlay -->
+            <div id="backdropOverlay" class="backdrop-overlay"></div>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+                <div class="max-w-4xl mx-auto p-4 lg:p-8">
+                    <!-- Pengenalan Section -->
+                    <section id="intro" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-home mr-3 text-zig-orange"></i>
+                            Pengenalan Zig Language
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+                            <p class="text-lg mb-4">
+                                Zig adalah bahasa pemrograman tujuan umum yang dirancang untuk <strong>robustness, optimalitas, dan maintainability</strong>. 
+                                Zig menawarkan alternatif yang lebih sederhana dan aman dibandingkan C sambil mempertahankan performa yang tinggi.
+                            </p>
+                            <div class="grid md:grid-cols-3 gap-4 mt-6">
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                    <i class="fas fa-bolt text-2xl text-zig-orange mb-2"></i>
+                                    <h3 class="font-semibold mb-2">Performa Tinggi</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Kompilasi langsung ke machine code tanpa overhead</p>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                    <i class="fas fa-shield-alt text-2xl text-zig-orange mb-2"></i>
+                                    <h3 class="font-semibold mb-2">Memory Safety</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Fitur built-in untuk mencegah memory leaks</p>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                    <i class="fas fa-code text-2xl text-zig-orange mb-2"></i>
+                                    <h3 class="font-semibold mb-2">Sederhana</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Sintaks yang bersih dan mudah dipahami</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Instalasi Section -->
-                <section id="install" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-cog mr-3 text-zig-orange"></i>
-                        Instalasi Zig
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4">Metode Instalasi</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="border-l-4 border-zig-orange pl-4">
-                                <h4 class="font-semibold mb-2">1. Menggunakan Package Manager</h4>
-                                <div class="code-editor">
-                                    <pre><code class="language-bash"># macOS (Homebrew)
+                    <!-- Instalasi Section -->
+                    <section id="install" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-cog mr-3 text-zig-orange"></i>
+                            Instalasi Zig
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <h3 class="text-xl font-semibold mb-4">Metode Instalasi</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-zig-orange pl-4">
+                                    <h4 class="font-semibold mb-2">1. Menggunakan Package Manager</h4>
+                                    <div class="code-editor">
+                                        <pre><code class="language-bash"># macOS (Homebrew)
 brew install zig
 
 # Ubuntu/Debian
@@ -332,79 +476,79 @@ sudo pacman -S zig
 
 # Windows (Scoop)
 scoop install zig</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="border-l-4 border-zig-orange pl-4">
-                                <h4 class="font-semibold mb-2">2. Download Manual</h4>
-                                <p class="mb-3">Download dari website resmi:</p>
-                                <a href="https://ziglang.org/download/" target="_blank" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
-                                    <i class="fas fa-external-link-alt mr-2"></i>
-                                    ziglang.org/download
-                                </a>
-                            </div>
+                                <div class="border-l-4 border-zig-orange pl-4">
+                                    <h4 class="font-semibold mb-2">2. Download Manual</h4>
+                                    <p class="mb-3">Download dari website resmi:</p>
+                                    <a href="https://ziglang.org/download/" target="_blank" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                                        <i class="fas fa-external-link-alt mr-2"></i>
+                                        ziglang.org/download
+                                    </a>
+                                </div>
 
-                            <div class="border-l-4 border-zig-orange pl-4">
-                                <h4 class="font-semibold mb-2">3. Verifikasi Instalasi</h4>
-                                <div class="code-editor">
-                                    <pre><code class="language-bash">zig version</code></pre>
+                                <div class="border-l-4 border-zig-orange pl-4">
+                                    <h4 class="font-semibold mb-2">3. Verifikasi Instalasi</h4>
+                                    <div class="code-editor">
+                                        <pre><code class="language-bash">zig version</code></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Hello World Section -->
-                <section id="hello" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-code mr-3 text-zig-orange"></i>
-                        Hello World
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <p class="mb-4">Mari kita mulai dengan program Hello World klasik dalam Zig:</p>
-                        
-                        <div class="code-editor mb-4">
-                            <pre><code class="language-zig">const std = @import("std");
+                    <!-- Hello World Section -->
+                    <section id="hello" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-code mr-3 text-zig-orange"></i>
+                            Hello World
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <p class="mb-4">Mari kita mulai dengan program Hello World klasik dalam Zig:</p>
+                            
+                            <div class="code-editor mb-4">
+                                <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     std.debug.print("Hello, World!\n", .{});
 }</code></pre>
-                        </div>
+                            </div>
 
-                        <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded">
-                            <h4 class="font-semibold mb-2">Penjelasan Kode:</h4>
-                            <ul class="list-disc list-inside space-y-1 text-sm">
-                                <li><code>const std = @import("std")</code> - Mengimpor standard library</li>
-                                <li><code>pub fn main() !void</code> - Fungsi utama yang mengembalikan error union</li>
-                                <li><code>std.debug.print</code> - Fungsi untuk mencetak output ke console</li>
-                                <li><code>.{}</code> - Argumen kosong karena tidak ada format specifier</li>
-                            </ul>
-                        </div>
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded">
+                                <h4 class="font-semibold mb-2">Penjelasan Kode:</h4>
+                                <ul class="list-disc list-inside space-y-1 text-sm">
+                                    <li><code>const std = @import("std")</code> - Mengimpor standard library</li>
+                                    <li><code>pub fn main() !void</code> - Fungsi utama yang mengembalikan error union</li>
+                                    <li><code>std.debug.print</code> - Fungsi untuk mencetak output ke console</li>
+                                    <li><code>.{}</code> - Argumen kosong karena tidak ada format specifier</li>
+                                </ul>
+                            </div>
 
-                        <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <h4 class="font-semibold mb-2">Menjalankan Program:</h4>
-                            <div class="code-editor">
-                                <pre><code class="language-bash"># Simpan sebagai hello.zig
+                            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <h4 class="font-semibold mb-2">Menjalankan Program:</h4>
+                                <div class="code-editor">
+                                    <pre><code class="language-bash"># Simpan sebagai hello.zig
 zig run hello.zig</code></pre>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Variabel Section -->
-                <section id="variables" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-variable mr-3 text-zig-orange"></i>
-                        Variabel
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <p class="mb-4">Zig memiliki dua cara untuk mendeklarasikan variabel: <code>const</code> dan <code>var</code>.</p>
+                    <!-- Variabel Section -->
+                    <section id="variables" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-variable mr-3 text-zig-orange"></i>
+                            Variabel
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <p class="mb-4">Zig memiliki dua cara untuk mendeklarasikan variabel: <code>const</code> dan <code>var</code>.</p>
 
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Constants (const)</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Constants (const)</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const PI = 3.14159;
@@ -413,16 +557,16 @@ pub fn main() void {
     std.debug.print("PI = {d}\n", .{PI});
     std.debug.print("Language = {s}\n", .{language});
 }</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <code>const</code> membuat variabel immutable (tidak bisa diubah setelah deklarasi)
+                                    </p>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                    <code>const</code> membuat variabel immutable (tidak bisa diubah setelah deklarasi)
-                                </p>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Variables (var)</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Variables (var)</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     var counter: i32 = 0;
@@ -434,41 +578,41 @@ pub fn main() void {
     std.debug.print("Counter = {}\n", .{counter});
     std.debug.print("Message = {s}\n", .{message});
 }</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <code>var</code> membuat variabel mutable (bisa diubah)
+                                    </p>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                    <code>var</code> membuat variabel mutable (bisa diubah)
-                                </p>
                             </div>
-                        </div>
 
-                        <div class="mt-6 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded">
-                            <h4 class="font-semibold mb-2">Type Inference:</h4>
-                            <p class="text-sm">Zig bisa menebak tipe data secara otomatis, tapi Anda juga bisa menentukannya secara eksplisit:</p>
-                            <div class="code-editor mt-2">
-                                <pre><code class="language-zig">// Type inference
+                            <div class="mt-6 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded">
+                                <h4 class="font-semibold mb-2">Type Inference:</h4>
+                                <p class="text-sm">Zig bisa menebak tipe data secara otomatis, tapi Anda juga bisa menentukannya secara eksplisit:</p>
+                                <div class="code-editor mt-2">
+                                    <pre><code class="language-zig">// Type inference
 const name = "Alice"; // []const u8
 const age = 25;       // i32
 
 // Explicit type
 const height: f32 = 1.75;
 const is_active: bool = true;</code></pre>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Tipe Data Section -->
-                <section id="types" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-database mr-3 text-zig-orange"></i>
-                        Tipe Data
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Tipe Data Primitif</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">// Integers
+                    <!-- Tipe Data Section -->
+                    <section id="types" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-database mr-3 text-zig-orange"></i>
+                            Tipe Data
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Tipe Data Primitif</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">// Integers
 const a: i8 = -128;      // 8-bit signed
 const b: u8 = 255;       // 8-bit unsigned
 const c: i32 = 1000;     // 32-bit signed
@@ -484,13 +628,13 @@ const is_false: bool = false;
 
 // Characters
 const letter: u8 = 'A';</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Tipe Data Komposit</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">// Arrays
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Tipe Data Komposit</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">// Arrays
 const numbers = [5]i32{ 1, 2, 3, 4, 5 };
 
 // Slices
@@ -506,14 +650,14 @@ const ptr = &value;
 // Optionals
 const maybe_number: ?i32 = null;
 const definite_number: ?i32 = 123;</code></pre>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="mt-6">
-                            <h3 class="text-xl font-semibold mb-3">Contoh Penggunaan</h3>
-                            <div class="code-editor">
-                                <pre><code class="language-zig">const std = @import("std");
+                            <div class="mt-6">
+                                <h3 class="text-xl font-semibold mb-3">Contoh Penggunaan</h3>
+                                <div class="code-editor">
+                                    <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Array operations
@@ -535,23 +679,23 @@ pub fn main() void {
     std.debug.print("Average score: {}\n", .{average});
     std.debug.print("Name length: {}\n", .{name_length});
 }</code></pre>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Fungsi Section -->
-                <section id="functions" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-function mr-3 text-zig-orange"></i>
-                        Fungsi
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Deklarasi Fungsi Dasar</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Fungsi Section -->
+                    <section id="functions" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-function mr-3 text-zig-orange"></i>
+                            Fungsi
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Deklarasi Fungsi Dasar</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 // Fungsi tanpa parameter dan return value
 fn greet() void {
@@ -583,13 +727,13 @@ pub fn main() !void {
     };
     std.debug.print("10 / 2 = {d}\n", .{result});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Fungsi dengan Multiple Return Values</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Fungsi dengan Multiple Return Values</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 // Mengembalikan struct
 fn minMax(numbers: []const i32) struct { min: i32, max: i32 } {
@@ -610,34 +754,34 @@ pub fn main() void {
     
     std.debug.print("Min: {}, Max: {}\n", .{ result.min, result.max });
 }</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-4 rounded">
+                                    <h4 class="font-semibold mb-2">Tips Fungsi:</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Gunakan <code>pub</code> untuk membuat fungsi bisa diakses dari file lain</li>
+                                        <li><code>!</code> sebelum return type menandakan fungsi bisa mengembalikan error</li>
+                                        <li>Gunakan <code>catch</code> untuk menangani error</li>
+                                        <li>Fungsi bisa mengembalikan multiple values menggunakan struct atau tuple</li>
+                                    </ul>
                                 </div>
                             </div>
-
-                            <div class="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-4 rounded">
-                                <h4 class="font-semibold mb-2">Tips Fungsi:</h4>
-                                <ul class="list-disc list-inside space-y-1 text-sm">
-                                    <li>Gunakan <code>pub</code> untuk membuat fungsi bisa diakses dari file lain</li>
-                                    <li><code>!</code> sebelum return type menandakan fungsi bisa mengembalikan error</li>
-                                    <li>Gunakan <code>catch</code> untuk menangani error</li>
-                                    <li>Fungsi bisa mengembalikan multiple values menggunakan struct atau tuple</li>
-                                </ul>
-                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Kontrol Alur Section -->
-                <section id="control" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-code-branch mr-3 text-zig-orange"></i>
-                        Kontrol Alur
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">If-Else</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Kontrol Alur Section -->
+                    <section id="control" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-code-branch mr-3 text-zig-orange"></i>
+                            Kontrol Alur
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">If-Else</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const age = 18;
@@ -652,13 +796,13 @@ pub fn main() void {
     const message = if (age >= 18) "Bisa memilih" else "Belum bisa memilih";
     std.debug.print("{s}\n", .{message});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Switch</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Switch</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const grade = 'B';
@@ -680,13 +824,13 @@ pub fn main() void {
     };
     std.debug.print("Score: {}\n", .{score});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Loops</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Loops</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // While loop
@@ -714,13 +858,13 @@ pub fn main() void {
         std.debug.print("Loop: {}\n", .{j});
     }
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Defer dan Errdefer</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Defer dan Errdefer</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Defer - dieksekusi saat keluar dari scope
@@ -750,24 +894,24 @@ fn riskyOperation() !i32 {
     
     return 42;
 }</code></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Structs Section -->
-                <section id="structs" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-cube mr-3 text-zig-orange"></i>
-                        Structs
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Deklarasi Struct Dasar</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Structs Section -->
+                    <section id="structs" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-cube mr-3 text-zig-orange"></i>
+                            Structs
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Deklarasi Struct Dasar</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 const Person = struct {
     name: []const u8,
@@ -807,13 +951,13 @@ pub fn main() void {
     const person2 = Person.create("Bob", 30, 1.75);
     person2.greet();
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Struct dengan Methods</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Struct dengan Methods</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 const Rectangle = struct {
     width: f32,
@@ -852,13 +996,13 @@ pub fn main() void {
     rect.scale(2.0);
     std.debug.print("After scaling - Width: {d}, Height: {d}\n", .{ rect.width, rect.height });
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Anonymous Structs</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Anonymous Structs</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Anonymous struct
@@ -883,24 +1027,24 @@ fn getConfig() struct {
         .port = 8080,
     };
 }</code></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Manajemen Memori Section -->
-                <section id="memory" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-memory mr-3 text-zig-orange"></i>
-                        Manajemen Memori
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Allocator</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Manajemen Memori Section -->
+                    <section id="memory" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-memory mr-3 text-zig-orange"></i>
+                            Manajemen Memori
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Allocator</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // General Purpose Allocator
@@ -925,13 +1069,13 @@ pub fn main() !void {
     }
     std.debug.print("\n", .{});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Arena Allocator</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Arena Allocator</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -952,13 +1096,13 @@ pub fn main() !void {
         block1.len, block2.len, block3.len
     });
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">String Allocation</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">String Allocation</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -987,34 +1131,34 @@ pub fn main() !void {
     
     std.debug.print("{s}\n", .{buffer.items});
 }</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded">
+                                    <h4 class="font-semibold mb-2">Penting:</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Selalu gunakan <code>defer</code> untuk memastikan memori dibebaskan</li>
+                                        <li>Gunakan <code>try</code> untuk menangani error allocation</li>
+                                        <li>Arena allocator berguna untuk alokasi massal dengan lifetime sama</li>
+                                        <li>General Purpose Allocator (GPA) adalah allocator default yang fleksibel</li>
+                                    </ul>
                                 </div>
                             </div>
-
-                            <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded">
-                                <h4 class="font-semibold mb-2">Penting:</h4>
-                                <ul class="list-disc list-inside space-y-1 text-sm">
-                                    <li>Selalu gunakan <code>defer</code> untuk memastikan memori dibebaskan</li>
-                                    <li>Gunakan <code>try</code> untuk menangani error allocation</li>
-                                    <li>Arena allocator berguna untuk alokasi massal dengan lifetime sama</li>
-                                    <li>General Purpose Allocator (GPA) adalah allocator default yang fleksibel</li>
-                                </ul>
-                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Konkurensi Section -->
-                <section id="concurrency" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-tasks mr-3 text-zig-orange"></i>
-                        Konkurensi
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Async/Await</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Konkurensi Section -->
+                    <section id="concurrency" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-tasks mr-3 text-zig-orange"></i>
+                            Konkurensi
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Async/Await</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // Membuat frame untuk async operations
@@ -1028,13 +1172,13 @@ fn fibonacci(n: u32) u32 {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Multiple Async Operations</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Multiple Async Operations</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // Menjalankan multiple async operations
@@ -1055,13 +1199,13 @@ fn computeTask(id: u32, delay_ms: u32) u32 {
     std.time.sleep(delay_ms * std.time.ns_per_ms);
     return id * 100;
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Thread Pool</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Thread Pool</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1097,116 +1241,116 @@ fn worker(counter: *std.atomic.Atomic(u32), id: u32) void {
     
     std.debug.print("Worker {} completed\n", .{id});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded">
-                                <h4 class="font-semibold mb-2">Fitur Konkurensi Zig:</h4>
-                                <ul class="list-disc list-inside space-y-1 text-sm">
-                                    <li><code>async/await</code> untuk asynchronous programming</li>
-                                    <li>Thread pool untuk parallel execution</li>
-                                    <li>Atomic operations untuk thread-safe data access</li>
-                                    <li>No data races by design (compile-time checks)</li>
-                                    <li>Minimal runtime overhead</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Dokumentasi Section -->
-                <section id="docs" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-book mr-3 text-zig-orange"></i>
-                        Dokumentasi Resmi
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Resources Resmi</h3>
-                                <div class="space-y-3">
-                                    <a href="https://ziglang.org/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">Website Resmi</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">ziglang.org</p>
-                                            </div>
-                                            <i class="fas fa-external-link-alt text-gray-400"></i>
-                                        </div>
-                                    </a>
-                                    
-                                    <a href="https://ziglang.org/documentation/master/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">Language Reference</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Dokumentasi lengkap</p>
-                                            </div>
-                                            <i class="fas fa-external-link-alt text-gray-400"></i>
-                                        </div>
-                                    </a>
-                                    
-                                    <a href="https://ziglearn.org/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">Zig Learn</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Tutorial interaktif</p>
-                                            </div>
-                                            <i class="fas fa-external-link-alt text-gray-400"></i>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">Komunitas</h3>
-                                <div class="space-y-3">
-                                    <a href="https://github.com/ziglang/zig" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">GitHub Repository</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Source code & issues</p>
-                                            </div>
-                                            <i class="fab fa-github text-gray-400"></i>
-                                        </div>
-                                    </a>
-                                    
-                                    <a href="https://discord.gg/ziglang" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">Discord Community</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Chat & support</p>
-                                            </div>
-                                            <i class="fab fa-discord text-gray-400"></i>
-                                        </div>
-                                    </a>
-                                    
-                                    <a href="https://www.reddit.com/r/Zig/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-semibold">Reddit Community</h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">r/Zig subreddit</p>
-                                            </div>
-                                            <i class="fab fa-reddit text-gray-400"></i>
-                                        </div>
-                                    </a>
+                                <div class="bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded">
+                                    <h4 class="font-semibold mb-2">Fitur Konkurensi Zig:</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li><code>async/await</code> untuk asynchronous programming</li>
+                                        <li>Thread pool untuk parallel execution</li>
+                                        <li>Atomic operations untuk thread-safe data access</li>
+                                        <li>No data races by design (compile-time checks)</li>
+                                        <li>Minimal runtime overhead</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Contoh Kode Section -->
-                <section id="examples" class="mb-12">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-laptop-code mr-3 text-zig-orange"></i>
-                        Contoh Kode
-                    </h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">File I/O</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                    <!-- Dokumentasi Section -->
+                    <section id="docs" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-book mr-3 text-zig-orange"></i>
+                            Dokumentasi Resmi
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Resources Resmi</h3>
+                                    <div class="space-y-3">
+                                        <a href="https://ziglang.org/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">Website Resmi</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">ziglang.org</p>
+                                                </div>
+                                                <i class="fas fa-external-link-alt text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                        
+                                        <a href="https://ziglang.org/documentation/master/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">Language Reference</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">Dokumentasi lengkap</p>
+                                                </div>
+                                                <i class="fas fa-external-link-alt text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                        
+                                        <a href="https://ziglearn.org/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">Zig Learn</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">Tutorial interaktif</p>
+                                                </div>
+                                                <i class="fas fa-external-link-alt text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">Komunitas</h3>
+                                    <div class="space-y-3">
+                                        <a href="https://github.com/ziglang/zig" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">GitHub Repository</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">Source code & issues</p>
+                                                </div>
+                                                <i class="fab fa-github text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                        
+                                        <a href="https://discord.gg/ziglang" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">Discord Community</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">Chat & support</p>
+                                                </div>
+                                                <i class="fab fa-discord text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                        
+                                        <a href="https://www.reddit.com/r/Zig/" target="_blank" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h4 class="font-semibold">Reddit Community</h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">r/Zig subreddit</p>
+                                                </div>
+                                                <i class="fab fa-reddit text-gray-400"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contoh Kode Section -->
+                    <section id="examples" class="mb-12">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-laptop-code mr-3 text-zig-orange"></i>
+                            Contoh Kode
+                        </h2>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">File I/O</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1225,13 +1369,13 @@ pub fn main() !void {
     
     std.debug.print("File contents:\n{s}\n", .{contents});
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">JSON Parsing</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">JSON Parsing</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1267,13 +1411,13 @@ pub fn main() !void {
         }
     }
 }</code></pre>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <h3 class="text-xl font-semibold mb-3">HTTP Server</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div>
+                                    <h3 class="text-xl font-semibold mb-3">HTTP Server</h3>
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1324,49 +1468,50 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
     
     _ = try stream.writeAll(response);
 }</code></pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 shadow-lg">
-        <div class="max-w-6xl mx-auto px-4 py-8">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Tentang</h3>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Website ini dibuat untuk membantu pembelajaran bahasa pemrograman Zig dalam bahasa Indonesia.
-                    </p>
+                    </section>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#intro" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Pengenalan</a></li>
-                        <li><a href="#install" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Instalasi</a></li>
-                        <li><a href="#docs" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Dokumentasi</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Contribute</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-4">
-                        Ingin membantu meningkatkan konten ini?
-                    </p>
-                    <a href="#" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
-                        <i class="fab fa-github mr-2"></i>
-                        Contribute on GitHub
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-600 dark:text-gray-400">
-                <p>&copy; 2024 Zig Language Indonesia. Made with <i class="fas fa-heart text-red-500"></i> for Zig community.</p>
-            </div>
+            </main>
         </div>
-    </footer>
+
+        <!-- Footer -->
+        <footer class="bg-white dark:bg-gray-800 shadow-lg">
+            <div class="max-w-6xl mx-auto px-4 py-8">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Tentang</h3>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Website ini dibuat untuk membantu pembelajaran bahasa pemrograman Zig dalam bahasa Indonesia.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#intro" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Pengenalan</a></li>
+                            <li><a href="#install" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Instalasi</a></li>
+                            <li><a href="#docs" class="text-gray-600 dark:text-gray-400 hover:text-zig-orange transition-colors">Dokumentasi</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Contribute</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Ingin membantu meningkatkan konten ini?
+                        </p>
+                        <a href="#" class="inline-flex items-center bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                            <i class="fab fa-github mr-2"></i>
+                            Contribute on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-600 dark:text-gray-400">
+                    <p>&copy; 2024 Zig Language Indonesia. Made with <i class="fas fa-heart text-red-500"></i> for Zig community.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-zig.min.js"></script>
@@ -1388,17 +1533,36 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
         
         // Mobile Menu
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const backdropOverlay = document.getElementById('backdropOverlay');
+        
+        function openMobileSidebar() {
+            mobileSidebar.classList.add('open');
+            backdropOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileSidebar() {
+            mobileSidebar.classList.remove('open');
+            backdropOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
         
         mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('hidden');
+            if (mobileSidebar.classList.contains('open')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
         });
         
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.add('hidden');
+        backdropOverlay.addEventListener('click', closeMobileSidebar);
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileSidebar.classList.contains('open')) {
+                closeMobileSidebar();
+            }
         });
         
         // Sidebar Navigation
@@ -1440,8 +1604,7 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
                     
                     // Close mobile menu if open
                     if (window.innerWidth < 1024) {
-                        sidebar.classList.remove('open');
-                        overlay.classList.add('hidden');
+                        closeMobileSidebar();
                     }
                 }
             });
@@ -1470,15 +1633,25 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
         // Add syntax highlighting
         Prism.highlightAll();
         
-        // Responsive handling
+        // Handle window resize
         function handleResize() {
             if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('open');
-                overlay.classList.add('hidden');
+                closeMobileSidebar();
             }
         }
         
         window.addEventListener('resize', handleResize);
+        
+        // Prevent content scroll when mobile sidebar is open
+        function preventScrollWhenSidebarOpen() {
+            if (mobileSidebar.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Initial check
         handleResize();
     </script>
 </body>
