@@ -51,15 +51,29 @@
             --hover-color: #4ade80;       /* Hover Hijau Muda */
         }
 
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: var(--text-primary);
             background-color: var(--bg-light);
+            min-height: 100%;
             overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
             transition: background-color 0.3s ease, color 0.3s ease;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Fix scrolling issues */
+        .scroll-container {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Theme Toggle Button */
@@ -100,10 +114,13 @@
             padding: 1rem 0;
             position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 999;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            will-change: transform;
         }
 
         /* Dark Mode Navbar Fix */
@@ -128,12 +145,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
         .nav-left {
             display: flex;
             align-items: center;
             gap: 1rem;
+            flex-shrink: 0;
         }
 
         .nav-logo {
@@ -162,6 +181,7 @@
         .social-links {
             display: flex;
             gap: 0.75rem;
+            flex-shrink: 0;
         }
 
         .social-links a {
@@ -191,6 +211,7 @@
         .nav-right {
             display: flex;
             gap: 0.25rem;
+            flex-shrink: 0;
         }
 
         .nav-link {
@@ -255,6 +276,7 @@
             padding: 0.5rem;
             background: none;
             border: none;
+            z-index: 1001;
         }
 
         .menu-toggle span {
@@ -268,6 +290,12 @@
 
         [data-theme="dark"] .menu-toggle span {
             background: #0a4d0a !important;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
         }
 
         /* Hero Section */
@@ -828,6 +856,9 @@
                 padding: 1rem;
                 box-shadow: 0 5px 20px rgba(0,0,0,0.2);
                 border-radius: 0 0 1rem 1rem;
+                max-height: calc(100vh - 80px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             [data-theme="dark"] .nav-right {
@@ -1057,6 +1088,11 @@
             body {
                 background: white !important;
                 color: black !important;
+                overflow: visible !important;
+            }
+
+            main {
+                margin-top: 0 !important;
             }
 
             .section {
@@ -1067,6 +1103,27 @@
             .project-card,
             .docs-list-item {
                 break-inside: avoid;
+            }
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                position: relative;
+                -webkit-text-size-adjust: 100%;
+            }
+        }
+
+        /* Prevent rubber band scrolling on iOS */
+        body {
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Fix for Android scrolling */
+        @media screen and (-webkit-device-pixel-ratio) {
+            body {
+                -webkit-overflow-scrolling: touch;
             }
         }
     </style>
@@ -1082,14 +1139,14 @@
         <div class="nav-container">
             <div class="nav-left">
                 <a href="#home" class="nav-logo">
-                    <i class="fa-brands fa-linux"></i>
+                    <i class="fas fa-cube"></i>
                     T4n OS
                 </a>
                 <div class="social-links">
-                    <a href="https://github.com/t4ngh0st" target="_blank" title="GitHub">
+                    <a href="https://github.com" target="_blank" title="GitHub">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="#" target="_blank" title="Discord">
+                    <a href="https://discord.com" target="_blank" title="Discord">
                         <i class="fab fa-discord"></i>
                     </a>
                 </div>
@@ -1100,7 +1157,7 @@
                 <a href="#download" class="nav-link">Download</a>
                 <a href="#about" class="nav-link">About</a>
             </div>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -1108,166 +1165,177 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>Selamat Datang di T4n OS</h1>
-            <p>Distro Linux berbasis Void Linux yang dirancang untuk performa, kestabilan, dan kemudahan kustomisasi.</p>
-            <div class="cta-buttons">
-                <a href="#documentation" class="btn btn-primary">
-                    <i class="fas fa-book"></i>
-                    Get Started
-                </a>
-                <a href="#download" class="btn btn-secondary">
-                    <i class="fas fa-download"></i>
-                    Download T4n OS
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="section">
-        <h2 class="section-title">Keunggulan Void Linux</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>Keamanan Terjamin</h3>
-                <p>Void Linux menggunakan XBPS sebagai manajer paketnya yang dirancang dengan keamanan dan integritas sebagai prioritas utama.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-code-branch"></i>
-                </div>
-                <h3>Rolling Release</h3>
-                <p>Sistem rolling release yang terus diperbarui, memberikan akses ke software terbaru tanpa perlu upgrade sistem besar.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-tachometer-alt"></i>
-                </div>
-                <h3>Performa Tinggi</h3>
-                <p>Void Linux menggunakan runit sebagai init system, yang lebih ringan dan cepat dibandingkan dengan alternatif lainnya.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-puzzle-piece"></i>
-                </div>
-                <h3>High Customize</h3>
-                <p>Tingkat kustomisasi yang tinggi memungkinkan Anda untuk membangun sistem sesuai kebutuhan spesifik Anda.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section class="section">
-        <h2 class="section-title">Projek Gh0sT4n</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-badge">Progress</div>
-                <div class="project-icon">
-                    <i class="fas fa-terminal"></i>
-                </div>
-                <h3>Pr0gsh</h3>
-                <p>Shell buatan T4n User yang tersedia di GitHub. Dirancang untuk produktivitas dan kustomisasi tinggi dengan fitur-fitur modern.</p>
-                <a href="https://github.com/t4ngh0st/pr0gshell" target="_blank" class="btn btn-primary">
-                    <i class="fab fa-github"></i> Lihat di GitHub
-                </a>
-            </div>
-            <div class="project-card">
-            <div class="project-badge">Progress</div>
-                <div class="project-icon">
-                    <i class="fas fa-box"></i>
-                </div>
-                <h3>tanman (T4n-Manager)</h3>
-                <p>Package manager buatan T4n User. Solusi alternatif untuk mengelola paket dengan antarmuka yang intuitif dan performa tinggi.</p>
-                <a href="https://github.com/t4ngh0st/T4n-Manager" target="_blank" class="btn btn-primary">
-                    <i class="fab fa-github"></i> Lihat di GitHub
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Documentation Section -->
-    <section id="documentation" class="section docs-section">
-        <h2 class="section-title">Dokumentasi</h2>
-        <div class="docs-list">
-            <div class="docs-list-item">
-                <div>
-                    <h3><i class="fas fa-book"></i> Void Linux Handbook</h3>
-                    <p>Dokumentasi resmi Void Linux yang lengkap untuk memahami sistem secara mendalam</p>
-                </div>
-                <a href="https://docs.voidlinux.org/" target="_blank" class="docs-link">
-                    Kunjungi <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-            <div class="docs-list-item">
-                <div>
-                    <h3><i class="fas fa-wikipedia-w"></i> Wiki T4n OS</h3>
-                    <p>Dokumentasi khusus T4n OS termasuk panduan instalasi dan konfigurasi</p>
-                </div>
-                <a href="wiki.html" class="docs-link">
-                    Baca <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="docs-list-item">
-                <div>
-                    <h3><i class="fab fa-github"></i> Projek GitHub</h3>
-                    <p>Koleksi Projek t4ngh0st</p>
-                </div>
-                <a href="https://github.com/t4ngh0st" target="_blank" class="docs-link">
-                    Lihat Projek <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Download Section -->
-    <section id="download" class="section download-section">
-        <h2 class="section-title" style="color: var(--text-light);">Download Distro</h2>
-        <div class="download-grid">
-            <div class="distro-card">
-                <div class="distro-logo">
-                    <i class="fa-brands fa-linux"></i>
-                </div>
-                <h3>Void Linux</h3>
-                <p>Distro Linux independen dengan rolling release, runit init system, dan XBPS package manager</p>
-                <a href="https://voidlinux.org/download/" class="btn btn-primary">Download</a>
-            </div>
-            <div class="distro-card">
-                <div class="distro-logo">
-                    <i class="fa-brands fa-linux"></i>
-                </div>
-                <h3>T4n OS</h3>
-                <p>Distro berbasis Void Linux dengan tambahan fitur dan kustomisasi untuk pengalaman yang lebih baik</p>
-                <a href="#" class="btn btn-primary">Download</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-        <h2 class="section-title">Tentang T4n OS</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <h3>Komunitas Void Linux Indonesia</h3>
-                <p>T4n OS adalah distribusi Linux berbasis Void Linux yang dikembangkan oleh komunitas di Indonesia. Kami bertujuan untuk menyediakan sistem operasi yang stabil, cepat, dan mudah dikustomisasi.</p>
-                <p>Dengan mengambil keunggulan Void Linux seperti sistem rolling release, manajer paket XBPS yang cepat, dan init system runit yang ringan, T4n OS menambahkan berbagai peningkatan dan kustomisasi untuk pengalaman pengguna yang lebih baik.</p>
-                <p>Bergabunglah dengan komunitas kami dalam mengembangkan dan mempopulerkan Void Linux serta T4n OS di Indonesia!</p>
-                <div class="cta-buttons" style="justify-content: flex-start; margin-top: 2rem;">
-                    <a href="https://t.me/voidlinux_id" class="btn btn-primary">
-                        <i class="fas fa-users"></i>
-                        Bergabung Sekarang
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Selamat Datang di T4n OS</h1>
+                <p>Distro Linux berbasis Void Linux yang dirancang untuk performa, kestabilan, dan kemudahan kustomisasi.</p>
+                <div class="cta-buttons">
+                    <a href="#documentation" class="btn btn-primary">
+                        <i class="fas fa-book"></i>
+                        Get Started
+                    </a>
+                    <a href="#download" class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Download T4n OS
                     </a>
                 </div>
             </div>
-            <div class="about-image">
-                <img src="main/images/Other.png" alt="Gh0sT4n 🫡">
+        </section>
+
+        <!-- Features Section -->
+        <section class="section">
+            <h2 class="section-title">Keunggulan Void Linux</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Keamanan Terjamin</h3>
+                    <p>Void Linux menggunakan XBPS sebagai manajer paketnya yang dirancang dengan keamanan dan integritas sebagai prioritas utama.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h3>Rolling Release</h3>
+                    <p>Sistem rolling release yang terus diperbarui, memberikan akses ke software terbaru tanpa perlu upgrade sistem besar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Performa Tinggi</h3>
+                    <p>Void Linux menggunakan runit sebagai init system, yang lebih ringan dan cepat dibandingkan dengan alternatif lainnya.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3>High Customize</h3>
+                    <p>Tingkat kustomisasi yang tinggi memungkinkan Anda untuk membangun sistem sesuai kebutuhan spesifik Anda.</p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="section">
+            <h2 class="section-title">Projek T4n OS</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-badge">Beta</div>
+                    <div class="project-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3>Pr0gsh</h3>
+                    <p>Shell buatan T4n User yang tersedia di GitHub. Dirancang untuk produktivitas dan kustomisasi tinggi dengan fitur-fitur modern.</p>
+                    <a href="https://github.com" target="_blank" class="btn btn-primary">
+                        <i class="fab fa-github"></i> Lihat di GitHub
+                    </a>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3>tanman (T4n-Manager)</h3>
+                    <p>Package manager buatan T4n User. Solusi alternatif untuk mengelola paket dengan antarmuka yang intuitif dan performa tinggi.</p>
+                    <a href="https://github.com" target="_blank" class="btn btn-primary">
+                        <i class="fab fa-github"></i> Lihat di GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section id="documentation" class="section docs-section">
+            <h2 class="section-title">Dokumentasi</h2>
+            <div class="docs-list">
+                <div class="docs-list-item">
+                    <div>
+                        <h3><i class="fas fa-book"></i> Void Linux Handbook</h3>
+                        <p>Dokumentasi resmi Void Linux yang lengkap untuk memahami sistem secara mendalam</p>
+                    </div>
+                    <a href="https://docs.voidlinux.org/" target="_blank" class="docs-link">
+                        Kunjungi <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div class="docs-list-item">
+                    <div>
+                        <h3><i class="fas fa-wikipedia-w"></i> Wiki T4n OS</h3>
+                        <p>Dokumentasi khusus T4n OS termasuk panduan instalasi dan konfigurasi</p>
+                    </div>
+                    <a href="wiki.html" class="docs-link">
+                        Baca <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="docs-list-item">
+                    <div>
+                        <h3><i class="fab fa-github"></i> Projek GitHub</h3>
+                        <p>Shell-pr0gshell - Koleksi script dan utilitas untuk produktivitas di terminal</p>
+                    </div>
+                    <a href="https://github.com" target="_blank" class="docs-link">
+                        Lihat Projek <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div class="docs-list-item">
+                    <div>
+                        <h3><i class="fas fa-graduation-cap"></i> Get Started</h3>
+                        <p>Panduan cepat untuk memulai perjalanan Anda dengan T4n OS dan Void Linux</p>
+                    </div>
+                    <a href="#" class="docs-link">
+                        Mulai <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download" class="section download-section">
+            <h2 class="section-title" style="color: var(--text-light);">Download Distro</h2>
+            <div class="download-grid">
+                <div class="distro-card">
+                    <div class="distro-logo">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>Void Linux</h3>
+                    <p>Distro Linux independen dengan rolling release, runit init system, dan XBPS package manager</p>
+                    <a href="#" class="btn btn-primary">Download</a>
+                </div>
+                <div class="distro-card">
+                    <div class="distro-logo">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>T4n OS</h3>
+                    <p>Distro berbasis Void Linux dengan tambahan fitur dan kustomisasi untuk pengalaman yang lebih baik</p>
+                    <a href="#" class="btn btn-primary">Download</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2 class="section-title">Tentang T4n OS</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Komunitas Void Linux Indonesia</h3>
+                    <p>T4n OS adalah distribusi Linux berbasis Void Linux yang dikembangkan oleh komunitas di Indonesia. Kami bertujuan untuk menyediakan sistem operasi yang stabil, cepat, dan mudah dikustomisasi.</p>
+                    <p>Dengan mengambil keunggulan Void Linux seperti sistem rolling release, manajer paket XBPS yang cepat, dan init system runit yang ringan, T4n OS menambahkan berbagai peningkatan dan kustomisasi untuk pengalaman pengguna yang lebih baik.</p>
+                    <p>Bergabunglah dengan komunitas kami dalam mengembangkan dan mempopulerkan Void Linux serta T4n OS di Indonesia!</p>
+                    <div class="cta-buttons" style="justify-content: flex-start; margin-top: 2rem;">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-users"></i>
+                            Bergabung Sekarang
+                        </a>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Void Linux BSPWM">
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
@@ -1280,7 +1348,7 @@
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
             </div>
-            <p>&copy; 2025 T4n OS Community. All rights reserved.</p>
+            <p>&copy; 2024 T4n OS Community. All rights reserved.</p>
             <p>Made with <i class="fas fa-heart" style="color: #e53e3e;"></i> for Void Linux Enthusiasts</p>
         </div>
     </footer>
@@ -1334,18 +1402,40 @@
         const navRight = document.getElementById('navRight');
 
         menuToggle.addEventListener('click', function() {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
             menuToggle.classList.toggle('active');
             navRight.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open on mobile
+            if (navRight.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         });
 
         // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
             const isClickInsideNav = event.target.closest('.navbar');
             const isClickInsideMenu = event.target.closest('.nav-right');
+            const isClickInsideToggle = event.target.closest('.menu-toggle');
             
-            if (!isClickInsideNav && !isClickInsideMenu && navRight.classList.contains('active')) {
+            if (!isClickInsideNav && !isClickInsideMenu && !isClickInsideToggle && navRight.classList.contains('active')) {
                 menuToggle.classList.remove('active');
                 navRight.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && navRight.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                navRight.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
             }
         });
 
@@ -1361,8 +1451,12 @@
                         behavior: 'smooth'
                     });
                     // Close mobile menu if open
-                    navRight.classList.remove('active');
-                    menuToggle.classList.remove('active');
+                    if (navRight.classList.contains('active')) {
+                        menuToggle.classList.remove('active');
+                        navRight.classList.remove('active');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        document.body.style.overflow = '';
+                    }
                 }
             });
         });
@@ -1425,6 +1519,8 @@
                 if (window.innerWidth > 768) {
                     navRight.classList.remove('active');
                     menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
                 }
                 updateActiveLink();
             }, 250);
@@ -1447,8 +1543,10 @@
             if (touchEndX < touchStartX - 50) {
                 // Swipe left - close menu if open
                 if (navRight.classList.contains('active')) {
-                    navRight.classList.remove('active');
                     menuToggle.classList.remove('active');
+                    navRight.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
                 }
             }
             if (touchEndX > touchStartX + 50) {
@@ -1457,12 +1555,35 @@
             }
         }
 
-        // Prevent horizontal scrolling on mobile when swiping
+        // Fix for iOS viewport height
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
+
+        // Prevent default touch behavior on certain elements
         document.addEventListener('touchmove', function(e) {
-            if (e.scale !== 1) {
+            // Only prevent if we're scrolling inside the nav menu
+            if (navRight.classList.contains('active') && !e.target.closest('.nav-right')) {
                 e.preventDefault();
             }
         }, { passive: false });
+
+        // Enable smooth scrolling for all browsers
+        document.documentElement.style.scrollBehavior = 'smooth';
+        
+        // Fix for Android Chrome address bar
+        window.addEventListener('resize', function() {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                window.setTimeout(function() {
+                    document.activeElement.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        });
     </script>
 </body>
 </html>
