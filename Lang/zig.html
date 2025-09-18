@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <link rel="manifest" href="images/site.webmanifest">
     <script>
         tailwind.config = {
@@ -53,14 +53,42 @@
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         
-        /* Code editor styling */
+        /* Code editor styling - Fixed for multi-platform */
         .code-editor {
             background: #1e1e1e;
             border-radius: 8px;
             overflow: hidden;
+            margin: 0;
+            position: relative;
         }
+        
         .dark .code-editor {
             background: #0d1117;
+        }
+        
+        .code-editor pre {
+            margin: 0 !important;
+            padding: 1rem !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            white-space: pre !important;
+            word-wrap: normal !important;
+            word-break: normal !important;
+            tab-size: 4 !important;
+            -moz-tab-size: 4 !important;
+            -o-tab-size: 4 !important;
+        }
+        
+        .code-editor code {
+            display: block !important;
+            font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Segoe UI Mono', 'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro', 'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace !important;
+            font-size: 0.875rem !important;
+            line-height: 1.5 !important;
+            white-space: pre !important;
+            word-spacing: normal !important;
+            word-break: normal !important;
+            word-wrap: normal !important;
+            hyphens: none !important;
         }
         
         /* Sidebar animation */
@@ -203,7 +231,85 @@
             top: 4rem;
             height: calc(100vh - 4rem);
         }
+        
+        /* Copy button styling */
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(55, 65, 81, 0.8);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        
+        .copy-button:hover {
+            background: rgba(55, 65, 81, 1);
+        }
+        
+        .copy-button.copied {
+            background: rgba(34, 197, 94, 0.8);
+        }
+        
+        /* Responsive code blocks */
+        @media (max-width: 640px) {
+            .code-editor code {
+                font-size: 0.75rem !important;
+            }
+            
+            .code-editor pre {
+                padding: 0.75rem !important;
+            }
+        }
+        
+        /* Ensure code blocks don't break layout */
+        .bg-white, .dark .bg-gray-800 {
+            overflow: hidden;
+        }
+        
+        .bg-white .code-editor,
+        .dark .bg-gray-800 .code-editor {
+            max-width: 100%;
+        }
+        
+        /* Custom horizontal scrollbar for code */
+        .code-editor pre::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .code-editor pre::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .code-editor pre::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        
+        .code-editor pre::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Fix for long lines in code */
+        .code-wrapper {
+            position: relative;
+            margin: 1rem 0;
+        }
+        
+        .code-wrapper .code-editor {
+            margin: 0;
+        }
     </style>
+    <!-- Add Fira Code font for better code display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- App Container -->
@@ -229,7 +335,7 @@
                     </button>
                     <button class="hidden md:flex items-center space-x-2 bg-zig-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
                         <i class="fas fa-download"></i>
-                        <a href="https://ziglang.org/download/"><span>Download Zig</span></a>
+                        <span>Download Zig</span>
                     </button>
                 </div>
             </div>
@@ -464,8 +570,9 @@
                             <div class="space-y-4">
                                 <div class="border-l-4 border-zig-orange pl-4">
                                     <h4 class="font-semibold mb-2">1. Menggunakan Package Manager</h4>
-                                    <div class="code-editor">
-                                        <pre><code class="language-bash"># macOS (Homebrew)
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-bash"># macOS (Homebrew)
 brew install zig
 
 # Ubuntu/Debian
@@ -476,6 +583,10 @@ sudo pacman -S zig
 
 # Windows (Scoop)
 scoop install zig</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
@@ -490,8 +601,13 @@ scoop install zig</code></pre>
 
                                 <div class="border-l-4 border-zig-orange pl-4">
                                     <h4 class="font-semibold mb-2">3. Verifikasi Instalasi</h4>
-                                    <div class="code-editor">
-                                        <pre><code class="language-bash">zig version</code></pre>
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-bash">zig version</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -507,15 +623,20 @@ scoop install zig</code></pre>
                         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                             <p class="mb-4">Mari kita mulai dengan program Hello World klasik dalam Zig:</p>
                             
-                            <div class="code-editor mb-4">
-                                <pre><code class="language-zig">const std = @import("std");
+                            <div class="code-wrapper">
+                                <div class="code-editor">
+                                    <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     std.debug.print("Hello, World!\n", .{});
 }</code></pre>
+                                </div>
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy mr-1"></i> Copy
+                                </button>
                             </div>
 
-                            <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded">
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded mt-4">
                                 <h4 class="font-semibold mb-2">Penjelasan Kode:</h4>
                                 <ul class="list-disc list-inside space-y-1 text-sm">
                                     <li><code>const std = @import("std")</code> - Mengimpor standard library</li>
@@ -527,9 +648,14 @@ pub fn main() !void {
 
                             <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <h4 class="font-semibold mb-2">Menjalankan Program:</h4>
-                                <div class="code-editor">
-                                    <pre><code class="language-bash"># Simpan sebagai hello.zig
+                                <div class="code-wrapper">
+                                    <div class="code-editor">
+                                        <pre><code class="language-bash"># Simpan sebagai hello.zig
 zig run hello.zig</code></pre>
+                                    </div>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy mr-1"></i> Copy
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -547,8 +673,9 @@ zig run hello.zig</code></pre>
                             <div class="grid md:grid-cols-2 gap-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Constants (const)</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const PI = 3.14159;
@@ -557,6 +684,10 @@ pub fn main() void {
     std.debug.print("PI = {d}\n", .{PI});
     std.debug.print("Language = {s}\n", .{language});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                     <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                                         <code>const</code> membuat variabel immutable (tidak bisa diubah setelah deklarasi)
@@ -565,8 +696,9 @@ pub fn main() void {
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Variables (var)</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     var counter: i32 = 0;
@@ -578,6 +710,10 @@ pub fn main() void {
     std.debug.print("Counter = {}\n", .{counter});
     std.debug.print("Message = {s}\n", .{message});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                     <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                                         <code>var</code> membuat variabel mutable (bisa diubah)
@@ -588,14 +724,19 @@ pub fn main() void {
                             <div class="mt-6 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded">
                                 <h4 class="font-semibold mb-2">Type Inference:</h4>
                                 <p class="text-sm">Zig bisa menebak tipe data secara otomatis, tapi Anda juga bisa menentukannya secara eksplisit:</p>
-                                <div class="code-editor mt-2">
-                                    <pre><code class="language-zig">// Type inference
+                                <div class="code-wrapper mt-2">
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">// Type inference
 const name = "Alice"; // []const u8
 const age = 25;       // i32
 
 // Explicit type
 const height: f32 = 1.75;
 const is_active: bool = true;</code></pre>
+                                    </div>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy mr-1"></i> Copy
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -611,8 +752,9 @@ const is_active: bool = true;</code></pre>
                             <div class="grid md:grid-cols-2 gap-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Tipe Data Primitif</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">// Integers
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">// Integers
 const a: i8 = -128;      // 8-bit signed
 const b: u8 = 255;       // 8-bit unsigned
 const c: i32 = 1000;     // 32-bit signed
@@ -628,13 +770,18 @@ const is_false: bool = false;
 
 // Characters
 const letter: u8 = 'A';</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Tipe Data Komposit</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">// Arrays
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">// Arrays
 const numbers = [5]i32{ 1, 2, 3, 4, 5 };
 
 // Slices
@@ -650,14 +797,19 @@ const ptr = &value;
 // Optionals
 const maybe_number: ?i32 = null;
 const definite_number: ?i32 = 123;</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mt-6">
                                 <h3 class="text-xl font-semibold mb-3">Contoh Penggunaan</h3>
-                                <div class="code-editor">
-                                    <pre><code class="language-zig">const std = @import("std");
+                                <div class="code-wrapper">
+                                    <div class="code-editor">
+                                        <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Array operations
@@ -679,6 +831,10 @@ pub fn main() void {
     std.debug.print("Average score: {}\n", .{average});
     std.debug.print("Name length: {}\n", .{name_length});
 }</code></pre>
+                                    </div>
+                                    <button class="copy-button" onclick="copyCode(this)">
+                                        <i class="fas fa-copy mr-1"></i> Copy
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -694,8 +850,9 @@ pub fn main() void {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Deklarasi Fungsi Dasar</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 // Fungsi tanpa parameter dan return value
 fn greet() void {
@@ -727,13 +884,18 @@ pub fn main() !void {
     };
     std.debug.print("10 / 2 = {d}\n", .{result});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Fungsi dengan Multiple Return Values</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 // Mengembalikan struct
 fn minMax(numbers: []const i32) struct { min: i32, max: i32 } {
@@ -754,6 +916,10 @@ pub fn main() void {
     
     std.debug.print("Min: {}, Max: {}\n", .{ result.min, result.max });
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
@@ -780,8 +946,9 @@ pub fn main() void {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">If-Else</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const age = 18;
@@ -796,13 +963,18 @@ pub fn main() void {
     const message = if (age >= 18) "Bisa memilih" else "Belum bisa memilih";
     std.debug.print("{s}\n", .{message});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Switch</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     const grade = 'B';
@@ -824,13 +996,18 @@ pub fn main() void {
     };
     std.debug.print("Score: {}\n", .{score});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Loops</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // While loop
@@ -858,13 +1035,18 @@ pub fn main() void {
         std.debug.print("Loop: {}\n", .{j});
     }
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Defer dan Errdefer</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Defer - dieksekusi saat keluar dari scope
@@ -894,6 +1076,10 @@ fn riskyOperation() !i32 {
     
     return 42;
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -910,8 +1096,9 @@ fn riskyOperation() !i32 {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Deklarasi Struct Dasar</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 const Person = struct {
     name: []const u8,
@@ -951,13 +1138,18 @@ pub fn main() void {
     const person2 = Person.create("Bob", 30, 1.75);
     person2.greet();
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Struct dengan Methods</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 const Rectangle = struct {
     width: f32,
@@ -996,13 +1188,18 @@ pub fn main() void {
     rect.scale(2.0);
     std.debug.print("After scaling - Width: {d}, Height: {d}\n", .{ rect.width, rect.height });
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Anonymous Structs</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() void {
     // Anonymous struct
@@ -1027,6 +1224,10 @@ fn getConfig() struct {
         .port = 8080,
     };
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1043,8 +1244,9 @@ fn getConfig() struct {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Allocator</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // General Purpose Allocator
@@ -1069,13 +1271,18 @@ pub fn main() !void {
     }
     std.debug.print("\n", .{});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Arena Allocator</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1096,13 +1303,18 @@ pub fn main() !void {
         block1.len, block2.len, block3.len
     });
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">String Allocation</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1131,6 +1343,10 @@ pub fn main() !void {
     
     std.debug.print("{s}\n", .{buffer.items});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
@@ -1157,8 +1373,9 @@ pub fn main() !void {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Async/Await</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // Membuat frame untuk async operations
@@ -1172,13 +1389,18 @@ fn fibonacci(n: u32) u32 {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Multiple Async Operations</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     // Menjalankan multiple async operations
@@ -1199,13 +1421,18 @@ fn computeTask(id: u32, delay_ms: u32) u32 {
     std.time.sleep(delay_ms * std.time.ns_per_ms);
     return id * 100;
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">Thread Pool</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1241,6 +1468,10 @@ fn worker(counter: *std.atomic.Atomic(u32), id: u32) void {
     
     std.debug.print("Worker {} completed\n", .{id});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
@@ -1349,8 +1580,9 @@ fn worker(counter: *std.atomic.Atomic(u32), id: u32) void {
                             <div class="space-y-6">
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">File I/O</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1369,13 +1601,18 @@ pub fn main() !void {
     
     std.debug.print("File contents:\n{s}\n", .{contents});
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">JSON Parsing</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1411,13 +1648,18 @@ pub fn main() !void {
         }
     }
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div>
                                     <h3 class="text-xl font-semibold mb-3">HTTP Server</h3>
-                                    <div class="code-editor">
-                                        <pre><code class="language-zig">const std = @import("std");
+                                    <div class="code-wrapper">
+                                        <div class="code-editor">
+                                            <pre><code class="language-zig">const std = @import("std");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -1468,6 +1710,10 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
     
     _ = try stream.writeAll(response);
 }</code></pre>
+                                        </div>
+                                        <button class="copy-button" onclick="copyCode(this)">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1516,6 +1762,26 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-zig.min.js"></script>
     <script>
+        // Copy code function
+        function copyCode(button) {
+            const codeWrapper = button.parentElement;
+            const codeBlock = codeWrapper.querySelector('code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+            });
+        }
+        
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
@@ -1610,26 +1876,6 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
             });
         });
         
-        // Copy code functionality
-        const codeBlocks = document.querySelectorAll('pre code');
-        codeBlocks.forEach(block => {
-            const pre = block.parentElement;
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors';
-            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-            pre.style.position = 'relative';
-            pre.appendChild(copyBtn);
-            
-            copyBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(block.textContent).then(() => {
-                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                    }, 2000);
-                });
-            });
-        });
-        
         // Add syntax highlighting
         Prism.highlightAll();
         
@@ -1642,6 +1888,9 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
         
         window.addEventListener('resize', handleResize);
         
+        // Initial check
+        handleResize();
+        
         // Prevent content scroll when mobile sidebar is open
         function preventScrollWhenSidebarOpen() {
             if (mobileSidebar.classList.contains('open')) {
@@ -1650,9 +1899,6 @@ fn handleConnection(allocator: std.mem.Allocator, stream: std.net.Stream) !void 
                 document.body.style.overflow = '';
             }
         }
-        
-        // Initial check
-        handleResize();
     </script>
 </body>
 </html>
