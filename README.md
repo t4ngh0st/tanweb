@@ -10,11 +10,9 @@
 Website ini berisi dokumentasi, artikel, dan proyek dari **T4n Project**.
 
 Struktur website:
-- 🖥️ **T4n OS** → <a href="./T4n-OS/index.html">Halaman Utama</a> & <a href="./T4n-OS/wiki.html">Wiki</a>
-- 🪙 **Gh0st Coin** → <a href="./Gh0st-Coin/index.html">Halaman Utama</a>
-- 💻 **Bahasa Pemrograman**:
-  - <a href="./Lang/python.html">Python</a>
-  - <a href="./Lang/zig.html">Zig</a>
+- 🙋🏻‍♂️ **About Me** → [Halaman Utama](https://t4ngh0st.github.io/tanweb/)
+- 🖥️ **T4n OS** → [Halaman T4n OS](https://t4ngh0st.github.io/tanweb/T4n-OS/index.html) & [Halaman Wiki](https://t4ngh0st.github.io/tanweb/T4n-OS/wiki.html)
+- 🪙 **Gh0st Coin** → [Halaman Gh0st Coin](https://t4ngh0st.github.io/tanweb/Gh0st-Coin/gcoin.html)
 
 ---
 
